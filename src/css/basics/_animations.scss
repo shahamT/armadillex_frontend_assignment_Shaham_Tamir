@@ -1,0 +1,64 @@
+@import "../setup/variables.scss";
+
+@keyframes open-right {
+	from {
+		width: 0;
+	}
+	to {
+		width: 30%;
+	}
+}
+
+@keyframes open-down {
+	from {
+		height: 0;
+	}
+	to {
+		height: 100%;
+	}
+}
+
+@keyframes side-to-side {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-25%);
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes pulse-grow {
+	0% {
+		transform: scale(1); /* Start at normal size */
+	}
+	50% {
+		transform: scale(1.1); /* Grow to 110% of the size */
+	}
+	100% {
+		transform: scale(1); /* Return to normal size */
+	}
+}
+
+@keyframes grow {
+	0% {
+		transform: scale(1); /* Grow to 110% of the size */
+		/* Start at normal size */
+	}
+	50% {
+		transform: scale(1.5); /* Grow to 110% of the size */
+	}
+	100% {
+		transform: scale(1); /* Return to normal size */
+	}
+}
+
+// Transitions

@@ -1,0 +1,138 @@
+@font-face {
+  font-family: almoni;
+  src: url(../assets/fonts/almoni-neue-regular-aaa.woff);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: almoni-medium;
+  src: url(../assets/fonts/almoni-neue-medium-aaa.woff);
+}
+
+@font-face {
+  font-family: almoni-light;
+  src: url(../assets/fonts/almoni-neue-light-aaa.woff);
+}
+
+@font-face {
+  font-family: almoni-thin;
+  src: url(../assets/fonts/almoni-neue-light-aaa.woff);
+}
+
+@font-face {
+  font-family: almoni-bold;
+  src: url(../assets/fonts/almoni-neue-demibold-aaa.woff);
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.text-font-bold {
+  font-family: almoni-bold;
+  font-weight: normal !important;
+}
+
+.text-font-medium {
+  font-family: almoni-medium;
+  font-weight: normal !important;
+}
+
+.text-font-light {
+  font-family: almoni-light;
+  font-weight: normal !important;
+}
+
+.text-font-thin {
+  font-family: almoni-thin;
+  font-weight: normal !important;
+}
+
+.text-font-regular {
+  font-family: almoni;
+  font-weight: normal !important;
+}
+
+.text-12 {
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.text-14 {
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+
+.text-16 {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.text-18 {
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+
+.text-20 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.text-22 {
+  font-size: 1.375rem;
+  line-height: 1.3;
+}
+
+.text-24 {
+  font-size: 1.5rem !important;
+  line-height: 1.3;
+}
+
+.text-25 {
+  font-size: 1.56rem;
+  line-height: 1.3;
+}
+
+.text-28 {
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+
+.text-30 {
+  font-size: 1.875rem;
+  line-height: 1.3;
+}
+
+.text-32 {
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.text-35 {
+  font-size: 2.18rem;
+  line-height: 1.3;
+}
+
+.text-40 {
+  font-size: 2.5rem;
+  line-height: 1.3;
+}
+
+.text-45 {
+  font-size: 2.81rem;
+  line-height: 1.2;
+}
+
+.text-52 {
+  font-size: 3.25rem;
+  line-height: 1.2;
+}
+
+.text-60 {
+  font-size: 3.75rem;
+  line-height: 1.1;
+}

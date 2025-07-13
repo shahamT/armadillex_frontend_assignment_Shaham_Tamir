@@ -1,0 +1,130 @@
+/* Media queries Breakpoint mixins */
+
+@mixin for-mobile-layout {
+  @media (max-width: $break-narrow) {
+    @content;
+  }
+}
+
+@mixin for-narrow-layout {
+  @media (min-width: $break-narrow) {
+    @content;
+  }
+}
+
+@mixin for-normal-layout {
+  @media (min-width: $break-normal) {
+    @content;
+  }
+}
+
+@mixin for-wide-layout {
+  @media (min-width: $break-wide) {
+    @content;
+  }
+}
+
+@mixin layoutGTC($max) {
+  grid-template-columns:
+    minmax($layout-padding, 1fr)
+    minmax(auto, $max)
+    minmax($layout-padding, 1fr);
+}
+
+/* Media  Mixins */
+
+//aspect ratio mixin
+@mixin aspect-ratio($width: 1, $height: 1) {
+  position: relative;
+  overflow: hidden;
+  &:before {
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: calc(($height / $width) * 100%);
+  }
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  > img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Mixin for removing hover efects on iphone screen
+@mixin hover-supported {
+  @media not all and (pointer: coarse) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin tool-tip-text($max-width) {
+  max-width: $max-width !important;
+
+  background-color: #fffcea !important;
+  color: $clr-primary !important;
+  padding: 0.75rem;
+  border: 1px solid #ffffff;
+  box-shadow: 0px 4px 12px 0px #0000001a;
+}
+
+@mixin action-btn($icon-size) {
+  box-shadow: $btn-shadow;
+
+  .q-icon {
+    position: relative;
+    font-size: $icon-size;
+  }
+}
+
+@mixin overlay-container($top) {
+  position: absolute;
+  bottom: 0;
+  top: $top;
+  right: 0;
+  left: 0;
+  z-index: 5000;
+  background-color: rgba(255, 255, 255, 0.351);
+  backdrop-filter: blur(3px);
+}
+
+@mixin modal-content($min-width, $max-height: initial) {
+  min-width: $min-width !important;
+  max-height: $max-height !important;
+
+  border: 1px solid $clr-border !important;
+  border-radius: 0.5rem !important;
+  position: relative;
+
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+  }
+
+  .sticky-actions {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+  }
+
+  .exit-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+    height: rem(40px);
+    width: rem(40px);
+    color: $clr-secondary !important;
+  }
+}

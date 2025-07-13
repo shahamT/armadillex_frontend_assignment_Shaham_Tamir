@@ -1,0 +1,87 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: $clr-primary;
+  font-family: 'almoni', 'Times New Roman', Times, serif;
+  scroll-behavior: smooth;
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'almoni', 'Times New Roman', Times, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: rgb(249, 251, 253);
+}
+
+@media (max-width: 1250px) {
+  html,
+  body {
+    // font-size: 14px;
+  }
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+  // color
+}
+
+pre {
+  margin: 0;
+  font-family: 'almoni', 'Times New Roman', Times, serif;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+iframe {
+  border: none;
+}
+
+.q-dialog {
+  z-index: 5555;
+}
+
+.q-select .q-icon {
+  color: $clr-primary !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #a9cfecad;
+  border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $clr-secondary;
+}

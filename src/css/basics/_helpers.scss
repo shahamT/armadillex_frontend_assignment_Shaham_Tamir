@@ -1,0 +1,66 @@
+.clean-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  > li {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.clean-input {
+  outline: none;
+  border: none;
+  /* width: max-content; */
+}
+
+.border-bottom {
+  border-bottom: 1px solid $clr-border;
+}
+
+.light-bordered {
+  border: 1px solid $clr-border !important;
+}
+
+.light-radius {
+  border-radius: $sm-radius !important;
+}
+
+.medium-radius {
+  border-radius: $md-radius !important;
+}
+
+.clean-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.events-none {
+  pointer-events: none;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.center {
+  text-align: center;
+}
+
+.hide {
+  display: none !important;
+}
+
+.no-shadow {
+  box-shadow: none;
+}

@@ -1,0 +1,102 @@
+/* app global css */
+:root {
+  --q-primary: #002644;
+  --q-primary-dark: #002d23;
+
+  --clr-cta: #ffcc65;
+  --clr-cta-light: #fffcea;
+
+  --q-info: #abc3d6;
+  --q-secondary: #7b97ac;
+  --q-secondary-light: #abc3d6;
+
+  --q-brand: #005faa;
+  --q-brand-light: #0085ee;
+
+  --q-warning: #df6363;
+
+  --q-accent: #f3f8fd;
+  --q-accent-table: #f9fbfd;
+  --q-accent-light: #a9cfec40;
+  --q-accent-bold: #a9cfec;
+
+  --q-success: #1fc16b;
+  --q-success-light: #1fc16b1a;
+  --q-success-dark: #089c5d;
+
+  --q-border-color: #efefef;
+  --q-light-border-color: rgba(255, 252, 234, 0.849);
+
+  --small-radius: 6px;
+  --medium-radius: 8px;
+
+  --main-shadow: 0 0 5px 0 #0000001a;
+  --btn-shadow: 0px 6px 12px 0px #0000000a;
+  --item-shadow: 0px 4px 5px 0px #1f24291c;
+
+  --small-screen: 900px;
+  --medium-screen: 1216px;
+  --large-screen: 1536px;
+  --max-width-screen: 1600px;
+
+  --modal-width-sm: clamp(450px, 80vw, 600px);
+  --modal-width-md: clamp(550px, 80vw, 700px);
+  --modal-width-lg: clamp(750px, 80vw, 900px);
+  --modal-width-xl: clamp(900px, 80vw, 1200px);
+  --modal-max-height: calc(100vh - 150px);
+}
+
+// SCSS Colors
+$clr-info: var(--q-info);
+$clr-primary: var(--q-primary);
+$clr-primary-dark: var(--q-primary-dark);
+
+$clr-brand: var(--q-brand);
+$clr-brand-light: var(--q-brand-light);
+$clr-warning: var(--q-warning);
+
+$clr-secondary: var(--q-secondary);
+$clr-secondary-trans: var(--q-secondary-trans);
+$clr-secondary-light: var(--q-secondary-light);
+
+$clr-success: var(--q-success);
+$clr-success-light: var(--q-success-light);
+$clr-success-dark: var(--q-success-dark);
+
+$clr-accent: var(--q-accent);
+$clr-accent-table: var(--q-accent-table);
+$clr-accent-light: var(--q-accent-light);
+$clr-accent-bold: var(--q-accent-bold);
+
+$clr-border: var(--q-border-color);
+$clr-light-border: var(--q-light-border-color);
+
+$clr-cta: var(--clr-cta);
+$clr-cta-light: var(--clr-cta-light);
+
+$main-shadow: var(--main-shadow);
+$btn-shadow: var(--btn-shadow);
+$item-shadow: var(--item-shadow);
+
+$sm-radius: var(--small-radius);
+$md-radius: var(--medium-radius);
+
+// LAYOUT
+$header-height: 4rem;
+$layout-padding: 1.5rem;
+$small-screen: var(--small-screen);
+$medium-screen: var(--medium-screen);
+$large-screen: var(--large-screen);
+$max-width-screen: var(--max-width-screen);
+
+// MODAL
+$modal-width-sm: var(--modal-width-sm);
+$modal-width-md: var(--modal-width-md);
+$modal-width-lg: var(--modal-width-lg);
+$modal-width-xl: var(--modal-width-xl);
+$modal-max-height: var(--modal-max-height);
+
+// LAYOUT BREAKPOINTS
+$break-narrow: 980px;
+$break-normal: 1320px;
+$break-wide: 1920px;

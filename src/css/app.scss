@@ -1,0 +1,13 @@
+// Set up !
+@import './setup/functions.scss';
+@import './setup/variables.scss';
+@import './setup/mixins.scss';
+@import './setup/typography.scss';
+
+@import './basics/animations.scss';
+@import './basics/base.scss';
+@import './basics/helpers.scss';
+@import './basics/layout.scss';
+@import './basics/colors.scss';
+
+@import './components/quasar-override';
