@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import pluginVue from 'eslint-plugin-vue'
 import pluginQuasar from '@quasar/app-vite/eslint'
+import prettier from '@vue/eslint-config-prettier'
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
 export default [
@@ -69,5 +70,6 @@ export default [
     },
   },
 
+  prettier,
   prettierSkipFormatting,
 ]
