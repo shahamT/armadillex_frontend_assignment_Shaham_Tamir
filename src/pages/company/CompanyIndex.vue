@@ -4,6 +4,7 @@
       <h1>Companies</h1>
     </q-card-section>
     <q-card-section>
+      <CompaniesList :companies="companies"/>
       <pre>
         {{ JSON.stringify(companies, null, 2) }}
       </pre>
@@ -12,7 +13,17 @@
 </template>
 
 <script setup>
+import CompaniesList from 'src/components/companies/CompaniesList.vue';
 import { useCompanies } from 'src/composables/useCompanies'
 
 const { companies } = useCompanies()
 </script>
+
+<style lang="scss">
+.company-card-preview{
+  :hover{
+    background-color: aqua;
+  }
+}
+
+</style>

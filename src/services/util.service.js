@@ -1,3 +1,5 @@
+import { countriesCodeMap } from "src/assets/jsons/countries"
+
 export function convertDateToUtcTS(date) {
   return Date.UTC(
     date.getUTCFullYear(),
@@ -49,4 +51,15 @@ function formatDay(day) {
 
 export function isValueEmpty(value) {
   return value === null || value === undefined || value === ''
+}
+
+export function getFlagUrl(countryCode){
+  if (!countryCode || !countriesCodeMap[countryCode]) return ''
+  const iso2Code = countriesCodeMap[countryCode].alpha2Code.toLowerCase()
+  return `https://flagcdn.com/w80/${iso2Code}.png`
+}
+
+export function getCountryFullName(countryCode){
+  if (!countryCode || !countriesCodeMap[countryCode]) return ''
+ return countriesCodeMap[countryCode].countryName
 }
