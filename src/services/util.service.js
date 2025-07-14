@@ -57,11 +57,23 @@ export function getCountries(){
     return Object.values(countriesCodeMap).map(c => c.countryName)
 }
 
-export function getFlagUrl(countryCode){
-  if (!countryCode || !countriesCodeMap[countryCode]) return ''
-  const iso2Code = countriesCodeMap[countryCode].alpha2Code.toLowerCase()
-  return `https://flagcdn.com/w80/${iso2Code}.png`
+export function getCountriesOptions(){
+     const options =  Object.entries(countriesCodeMap).map(([code, data]) => ({
+    label: data.countryName,
+    value: code,
+    description: code,
+    flagURL: getFlagUrl(code) || 'public/imgs/placeholder_flag.jpg',
+  }))
+  return options
 }
+
+export function getFlagUrl(countryCode) {
+  const country = countriesCodeMap[countryCode]
+  const iso2Code = country?.alpha2Code?.toLowerCase()
+
+  return iso2Code ? `https://flagcdn.com/w80/${iso2Code}.png` : ''
+}
+
 
 export function getCountryFullName(countryCode){
   if (!countryCode || !countriesCodeMap[countryCode]) return ''

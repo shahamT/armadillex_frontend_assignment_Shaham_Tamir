@@ -25,11 +25,12 @@
       <!-- Filter button -->
       <div class="auto text-18">
         <q-btn
-          filled
+          :outline="!filterOpen && activeFilters <= 0"
           color="secondary"
-          icon="tune"
-          label="Filters"
-          class="full-width"
+          padding="8px 16px"
+          icon="filter_list"
+          :label="activeFilters > 0 ? `Filters (${activeFilters})` : 'Filters'"
+          class="full-width light-radius"
           @click="filterOpen = !filterOpen"
         />
       </div>
@@ -47,7 +48,7 @@
       </div>
     </div>
 
-    <!-- Filters row -->
+    <!-- Filters panel -->
     <q-slide-transition>
       <div
         v-show="filterOpen"
@@ -63,7 +64,7 @@
             <q-toggle
               :model-value="filterBy.active"
               @update:model-value="(val) => onUpdate('active', val)"
-              label="Active Companies Only"
+              label="Show inactive companies"
               color="brand"
             />
             <q-toggle
@@ -81,22 +82,87 @@
           </div>
 
           <!-- Country select -->
-          <div class="col-3">
+          <div class="col-3 q-ml-lg">
             <q-select
-              class="text-16"
+              :model-value="selectedCountryObj"
+              @update:model-value="
+                (val) => onUpdate('country', val?.value || '')
+              "
               outlined
               dense
-              :model-value="filterBy.country"
-              @update:model-value="(val) => onUpdate('country', val)"
-              placeholder="Filter by country"
-              use-input
-              emit-value
-              map-options
-              :options="countryOptions"
-              prepend-inner-icon="public"
-              color="brand"
               clearable
-            />
+              use-input
+              hide-selected
+              fill-input
+              placeholder="Filter by country"
+              :options="filteredOptions"
+              color="brand"
+              @filter="filterFn"
+              @filter-abort="abortFilterFn"
+            >
+              <!-- Option -->
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-img
+                      :src="scope.opt.flagURL"
+                      fit="contain"
+                      class="country-flag"
+                    />
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.label }}</q-item-label>
+                    <q-item-label caption>
+                      {{ scope.opt.description }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+
+              <template v-slot:prepend>
+                <q-img
+                  :src="
+                    selectedCountryObj?.flagURL ||
+                    'public/imgs/placeholder_flag.jpg'
+                  "
+                  fit="contain"
+                  class="country-flag q-ml-xs q-mr-xs"
+                />
+              </template>
+
+              <!-- No results -->
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey"
+                    >No countries found</q-item-section
+                  >
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+
+          <!-- Clear filters button -->
+          <div
+            v-if="activeFilters > 0"
+            class="auto q-ml-auto"
+          >
+            <div class="auto text-18">
+              <q-btn
+                outline
+                color="secondary"
+                padding="8px 16px"
+                icon="filter_list_off"
+                label="Clear Filters"
+                class="light-radius"
+                @click="
+                  () => {
+                    clearFilters()
+                    filterOpen = false
+                  }
+                "
+              />
+            </div>
           </div>
         </q-card>
       </div>
@@ -105,10 +171,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { getCountries } from 'src/services/util.service'
+import { ref, computed } from 'vue'
+import { getCountriesOptions } from 'src/services/util.service'
 
-defineProps({
+const { filterBy, onUpdate, maxPage } = defineProps({
   filterBy: {
     type: Object,
     required: true,
@@ -123,8 +189,48 @@ defineProps({
   },
 })
 
+//filter section expanded/collapsed
 const filterOpen = ref(false)
-const countryOptions = getCountries()
+
+//counting active filters
+const activeFilters = computed(() => {
+  let count = 0
+  if (filterBy.country) count++
+  if (filterBy.active) count++
+  if (filterBy.ai) count++
+  if (filterBy.dpf) count++
+  return count
+})
+
+//clear filters
+function clearFilters() {
+  filterBy.country = ''
+  filterBy.active = false
+  filterBy.ai = false
+  filterBy.dpf = false
+}
+
+//---- select country filter -----
+const allOptions = getCountriesOptions()
+const filteredOptions = ref([...allOptions])
+
+function filterFn(val, update) {
+  const search = val.toLowerCase()
+  filteredOptions.value = allOptions.filter(
+    (opt) =>
+      opt.label.toLowerCase().includes(search) ||
+      opt.description.toLowerCase().includes(search),
+  )
+  update()
+}
+
+function abortFilterFn() {
+  filteredOptions.value = [...allOptions]
+}
+
+const selectedCountryObj = computed(
+  () => allOptions.find((opt) => opt.value === filterBy.country) || null,
+)
 </script>
 
 <style scoped lang="scss">
@@ -138,5 +244,12 @@ const countryOptions = getCountries()
   &:hover {
     background-color: rgb(223, 223, 223);
   }
+}
+
+.country-flag {
+  width: 32px;
+  max-height: 24px;
+  border: 1px solid var(--q-secondary-light);
+  border-radius: 2px;
 }
 </style>

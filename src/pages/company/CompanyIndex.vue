@@ -1,9 +1,16 @@
 <template>
   <q-card class="list-container">
     <!-- header -->
-    <q-card-section>
+    <q-card-section class="row">
+      <!-- <q-icon
+        name="work"
+        size="24px"
+        color="primary"
+      /> -->
       <h1 class="text-40">Companies</h1>
     </q-card-section>
+
+    <q-separator />
 
     <!-- filter -->
     <CompaniesFilterPanel
@@ -22,7 +29,6 @@
         :isLoading="isLoading"
       />
     </div>
-
   </q-card>
 </template>
 
@@ -36,8 +42,6 @@ import CompaniesList from 'src/components/companies/CompaniesList.vue'
 
 const filterBy = reactive(companiesService.getDefaultFilterBy())
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
-
-console.log('companies: ', companies)
 
 function updateFilterBy(key, value) {
   filterBy[key] = value

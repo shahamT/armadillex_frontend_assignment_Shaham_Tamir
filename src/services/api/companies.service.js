@@ -1,4 +1,3 @@
-
 export const companiesService = {
   getCompanies,
   getDefaultFilterBy,
@@ -8,36 +7,42 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
   const companies = _refactorCompanies(demoCompanies)
 
   const filtered = companies.filter((c) => {
-    const matchesSearch = !filterBy.search || (
+    const matchesSearch =
+      !filterBy.search ||
       c.name?.toLowerCase().includes(filterBy.search.toLowerCase()) ||
       c.legalName?.toLowerCase().includes(filterBy.search.toLowerCase())
-    )
 
     const matchesCountry = !filterBy.country || c.country === filterBy.country
-    const matchesActive = !filterBy.active || c.active
+    const matchesActive = filterBy.active || c.active
     const matchesAI = !filterBy.ai || c.providesAiServices
     const matchesDPF = !filterBy.dpf || c.isDpfFound
 
-    return matchesSearch && matchesCountry && matchesActive && matchesAI && matchesDPF
+    return (
+      matchesSearch &&
+      matchesCountry &&
+      matchesActive &&
+      matchesAI &&
+      matchesDPF
+    )
   })
 
   const sorted = [...filtered].sort((a, b) => {
-  const dir = filterBy.sortDir === 'desc' ? -1 : 1
-  const aVal = a[filterBy.sortBy]
-  const bVal = b[filterBy.sortBy]
+    const dir = filterBy.sortDir === 'desc' ? -1 : 1
+    const aVal = a[filterBy.sortBy]
+    const bVal = b[filterBy.sortBy]
 
-  // Custom handling for boolean fields
-  if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
-    if (aVal === bVal) return 0
-    return (aVal ? -1 : 1) * dir
-  }
+    // Custom handling for boolean fields
+    if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
+      if (aVal === bVal) return 0
+      return (aVal ? -1 : 1) * dir
+    }
 
-  const aStr = aVal?.toString().toLowerCase()
-  const bStr = bVal?.toString().toLowerCase()
-  if (aStr < bStr) return -1 * dir
-  if (aStr > bStr) return 1 * dir
-  return 0
-})
+    const aStr = aVal?.toString().toLowerCase()
+    const bStr = bVal?.toString().toLowerCase()
+    if (aStr < bStr) return -1 * dir
+    if (aStr > bStr) return 1 * dir
+    return 0
+  })
 
   const pageSize = 15
   const startIdx = (filterBy.page - 1) * pageSize
@@ -47,23 +52,22 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     setTimeout(() => {
       resolve({
         companies: paginated,
-        total: filtered.length
+        total: filtered.length,
       })
     }, 500)
   })
 }
 
-
 function getDefaultFilterBy() {
   return {
     search: '',
     country: '',
-    active: true,
+    active: false,
     ai: false,
     dpf: false,
     sortBy: 'dateAdded',
     sortDir: 'desc',
-    page: 1
+    page: 1,
   }
 }
 
@@ -80,7 +84,6 @@ function _refactorCompanies(companies) {
     providesAiServices: company.provides_ai_services,
   }))
 }
-
 
 var demoCompanies = [
   {

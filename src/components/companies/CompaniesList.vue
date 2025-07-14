@@ -46,9 +46,10 @@
       </div>
 
       <!-- Clear Sort button -->
-      <div class="col-auto self-end">
+      <div class="col-auto q-ml-auto q-mr-sm">
         <q-btn
           v-if="isCustomSortApplied"
+          outline
           label="Clear Sort"
           icon="clear"
           size="sm"
