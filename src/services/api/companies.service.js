@@ -5,6 +5,8 @@ export const companiesService = {
 }
 
 async function getCompanies(filterBy = getDefaultFilterBy()) {
+  console.log('filterBy at fetch time:', JSON.stringify(filterBy, null, 2))
+
   const companies = _refactorCompanies(demoCompanies)
 
   const filtered = companies.filter((c) => {

@@ -46,9 +46,12 @@
 
       <!-- ------DPF------- -->
       <div class="col-2 q-pr-sm">
-        <q-icon v-if="company.isDpfFound" name="check_circle" class="dpf-icon text-18" />
+        <q-icon
+          v-if="company.isDpfFound"
+          name="check_circle"
+          class="dpf-icon text-18"
+        />
       </div>
-
 
       <!-- ------AI------- -->
       <div class="col-2 q-pr-sm">
@@ -64,9 +67,15 @@
         </q-badge>
       </div>
 
-
-
-
+      <!-- ------Inactive------- -->
+      <div class="col-2 q-pr-sm">
+        <q-badge
+          class="inactive-badge text-12 q-pr-sm"
+          v-if="!company.active"
+        >
+          Inactive Company
+        </q-badge>
+      </div>
     </div>
   </q-card>
 </template>
@@ -105,6 +114,11 @@ function viewCompany(id) {
   .ai-badge {
     background: linear-gradient(135deg, #e0eaff, #f3e5ff);
     color: var(--q-brand);
+  }
+
+  .inactive-badge {
+    background-color: var(--disabled-bg-color);
+    color: var(--disabled-text-color);
   }
 
   .dpf-icon {

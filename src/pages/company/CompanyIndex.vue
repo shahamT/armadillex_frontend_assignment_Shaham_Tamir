@@ -51,6 +51,8 @@ import CompaniesList from 'src/components/companies/CompaniesList.vue'
 const filterBy = reactive(companiesService.getDefaultFilterBy())
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
 
+console.log("companies: ", companies)
+
 function updateFilterBy(key, value) {
   filterBy[key] = value
 }
