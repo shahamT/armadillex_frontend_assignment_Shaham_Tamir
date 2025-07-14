@@ -13,27 +13,13 @@
     />
 
     <!-- list -->
-    <div
-      v-if="!isLoading"
-      class="companies-list-wrapper column q-pa-md"
-    >
+    <div class="companies-list-wrapper column q-pa-md">
       <CompaniesList
         :companies="companies"
-        class="column"
         :maxPage="maxPage"
-        :currentPage="filterBy.page"
-        :onPageChange="(val) => updateFilterBy('page', val)"
-      />
-    </div>
-
-    <!-- list loading state -->
-    <div
-      v-else
-      class="q-pa-lg flex full-width items-center justify-center"
-    >
-      <q-spinner
-        color="brand"
-        size="4em"
+        :filterBy="filterBy"
+        :updateFilterBy="updateFilterBy"
+        :isLoading="isLoading"
       />
     </div>
 
@@ -51,7 +37,7 @@ import CompaniesList from 'src/components/companies/CompaniesList.vue'
 const filterBy = reactive(companiesService.getDefaultFilterBy())
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
 
-console.log("companies: ", companies)
+console.log('companies: ', companies)
 
 function updateFilterBy(key, value) {
   filterBy[key] = value

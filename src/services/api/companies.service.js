@@ -5,8 +5,6 @@ export const companiesService = {
 }
 
 async function getCompanies(filterBy = getDefaultFilterBy()) {
-  console.log('filterBy at fetch time:', JSON.stringify(filterBy, null, 2))
-
   const companies = _refactorCompanies(demoCompanies)
 
   const filtered = companies.filter((c) => {
@@ -24,13 +22,22 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
   })
 
   const sorted = [...filtered].sort((a, b) => {
-    const dir = filterBy.sortDir === 'desc' ? -1 : 1
-    const aVal = a[filterBy.sortBy]?.toString().toLowerCase()
-    const bVal = b[filterBy.sortBy]?.toString().toLowerCase()
-    if (aVal < bVal) return -1 * dir
-    if (aVal > bVal) return 1 * dir
-    return 0
-  })
+  const dir = filterBy.sortDir === 'desc' ? -1 : 1
+  const aVal = a[filterBy.sortBy]
+  const bVal = b[filterBy.sortBy]
+
+  // Custom handling for boolean fields
+  if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
+    if (aVal === bVal) return 0
+    return (aVal ? -1 : 1) * dir
+  }
+
+  const aStr = aVal?.toString().toLowerCase()
+  const bStr = bVal?.toString().toLowerCase()
+  if (aStr < bStr) return -1 * dir
+  if (aStr > bStr) return 1 * dir
+  return 0
+})
 
   const pageSize = 15
   const startIdx = (filterBy.page - 1) * pageSize
@@ -46,6 +53,7 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
   })
 }
 
+
 function getDefaultFilterBy() {
   return {
     search: '',
@@ -53,8 +61,8 @@ function getDefaultFilterBy() {
     active: true,
     ai: false,
     dpf: false,
-    sortBy: 'name',
-    sortDir: 'asc',
+    sortBy: 'dateAdded',
+    sortDir: 'desc',
     page: 1
   }
 }

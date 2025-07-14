@@ -9,26 +9,63 @@
   >
     <div class="row items-center full-width">
       <div class="col-auto q-pl-md q-pr-md">
-        <div class="flag-placeholder"></div>
+        <div class="flag-placeholder">
+          <SortButton
+            :sortKey="'country'"
+            :filterBy="filterBy"
+            :updateFilterBy="updateFilterBy"
+          />
+        </div>
       </div>
 
-      <div class="col-4">
-        <p>Company</p>
+      <div class="col-4 row items-center">
+        <p class="q-pr-xs">Company</p>
+        <SortButton
+          :sortKey="'name'"
+          :filterBy="filterBy"
+          :updateFilterBy="updateFilterBy"
+        />
       </div>
 
-      <div class="col-2">
-        <p>DPF</p>
+      <div class="col-2 row items-center">
+        <p class="q-pr-xs">DPF</p>
+        <SortButton
+          :sortKey="'isDpfFound'"
+          :filterBy="filterBy"
+          :updateFilterBy="updateFilterBy"
+        />
       </div>
 
-      <div class="col-2">
-        <p>AI Services</p>
+      <div class="col-2 row items-center">
+        <p class="q-pr-xs">AI Services</p>
+        <SortButton
+          :sortKey="'providesAiServices'"
+          :filterBy="filterBy"
+          :updateFilterBy="updateFilterBy"
+        />
+      </div>
+
+      <!-- Clear Sort button -->
+      <div class="col-auto self-end">
+        <q-btn
+          v-if="isCustomSortApplied"
+          label="Clear Sort"
+          icon="clear"
+          size="sm"
+          color="secondary"
+          class="text-16"
+          @click="clearSort"
+        />
       </div>
     </div>
   </q-card>
 
   <!-- items list -->
 
-  <div class="companies-list column q-gutter-y-sm q-pt-sm scroll">
+  <div
+    v-if="!isLoading"
+    class="companies-list column q-gutter-y-sm q-pt-sm scroll"
+  >
     <CompanyCardPreview
       v-for="company in companies"
       :key="company.id"
@@ -36,22 +73,36 @@
     />
   </div>
 
+  <!-- list loading state -->
+  <div
+    v-else
+    class="q-pa-lg flex full-width items-center justify-center"
+  >
+    <q-spinner
+      color="brand"
+      size="4em"
+    />
+  </div>
+
   <!-- Pagination -->
   <div class="col row justify-end items-center">
     <q-pagination
-      :model-value="currentPage"
-      @update:model-value="onPageChange"
+      :model-value="filterBy.page"
+      @update:model-value="(val) => updateFilterBy('page', val)"
       :max="maxPage"
       direction-links
-      gutter="20px"
+      gutter="8px"
+      color="brand"
     />
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import SortButton from '../common/SortButton.vue'
 import CompanyCardPreview from './CompanyCardPreview.vue'
 
-defineProps({
+const props = defineProps({
   companies: {
     type: Array,
     required: true,
@@ -60,15 +111,33 @@ defineProps({
     type: Number,
     required: true,
   },
-  currentPage: {
-    type: Number,
+  filterBy: {
+    type: Object,
     required: true,
   },
-  onPageChange: {
+  updateFilterBy: {
     type: Function,
     required: true,
   },
+  isLoading: {
+    type: Boolean,
+    required: true,
+  },
 })
+
+
+const isCustomSortApplied = computed(() => {
+  return (
+    props.filterBy.sortBy !== 'dateAdded' ||
+    props.filterBy.sortDir !== 'desc'
+  )
+})
+
+function clearSort() {
+  props.updateFilterBy('sortBy', 'dateAdded')
+  props.updateFilterBy('sortDir', 'desc')
+}
+
 </script>
 
 <style lang="scss">

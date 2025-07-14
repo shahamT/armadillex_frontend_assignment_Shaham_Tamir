@@ -41,7 +41,8 @@
           @update:model-value="(val) => onUpdate('page', val)"
           :max="maxPage"
           direction-links
-          gutter="20px"
+          gutter="8px"
+          color="brand"
         />
       </div>
     </div>
