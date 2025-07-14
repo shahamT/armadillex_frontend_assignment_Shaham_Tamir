@@ -1,36 +1,73 @@
 <template>
   <q-card
     @click="viewCompany(company.id)"
-    class="company-card-preview q-pa-sm"
+    class="company-card-preview flex items-center"
+    style="height: 48px"
     bordered
   >
-    <q-card-section
-      horizontal
-      class="company-details"
-    >
-      <q-img
-        class="country-flag"
-        :src="getFlagUrl(company.country)"
-        style="width: 24px; height: 16px"
-        fit="contain"
-        spinner-color="grey-5"
-      >
-        <q-tooltip
-          class="text-body2"
-          anchor="top middle"
-          self="bottom middle"
-          :offset="[10, 10]"
+    <div class="row items-center full-width">
+      <!-- ------flag------- -->
+
+      <div class="col-auto q-pl-md q-pr-md">
+        <q-img
+          class="country-flag"
+          :src="getFlagUrl(company.country)"
+          fit="contain"
+          spinner-color="grey-5"
         >
-          {{ company.country }} ({{ getCountryFullName(company.country) }})
-        </q-tooltip>
-      </q-img>
-      <q-card-section>
-        <p class="company-name text-24">{{ company.name }}</p>
-      </q-card-section>
-      <q-card-section>
-        <p class="text-24">{{ company.name }}</p>
-      </q-card-section>
-    </q-card-section>
+          <q-tooltip
+            class="text-body2"
+            anchor="top left"
+            self="bottom left"
+            :offset="[17, 20]"
+          >
+            {{ company.country }} ({{ getCountryFullName(company.country) }})
+          </q-tooltip>
+        </q-img>
+      </div>
+
+      <!-- ------company name------- -->
+      <div class="col-4 q-pr-sm flex items-center">
+        <span
+          class="company-name text-18 text-font-medium text-primary text-no-wrap ellipsis relative-position"
+          style="display: inline-block"
+        >
+          {{ company.name }}
+          <q-tooltip
+            class="text-body2"
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[0, 16]"
+          >
+            {{ company.name }}
+          </q-tooltip>
+        </span>
+      </div>
+
+      <!-- ------DPF------- -->
+      <div class="col-2 q-pr-sm">
+        <q-icon v-if="company.isDpfFound" name="check_circle" class="dpf-icon text-18" />
+      </div>
+
+
+      <!-- ------AI------- -->
+      <div class="col-2 q-pr-sm">
+        <q-badge
+          class="ai-badge text-12 q-pr-sm"
+          v-if="company.providesAiServices"
+        >
+          <q-icon
+            name="smart_toy"
+            class="q-mr-xs"
+          />
+          AI
+        </q-badge>
+      </div>
+
+
+
+
+    </div>
   </q-card>
 </template>
 
@@ -49,4 +86,29 @@ function viewCompany(id) {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import '/src/css/setup/variables.scss';
+
+.company-card-preview {
+  box-shadow: var(--list-item-shadow);
+  &:hover {
+    background-color: rgba(0, 38, 68, 0.01);
+    box-shadow: var(--list-item-shadow-hover);
+    cursor: pointer;
+  }
+
+  .country-flag {
+    width: 24px;
+    height: 16px;
+  }
+
+  .ai-badge {
+    background: linear-gradient(135deg, #e0eaff, #f3e5ff);
+    color: var(--q-brand);
+  }
+
+  .dpf-icon {
+    color: var(--q-success);
+  }
+}
+</style>

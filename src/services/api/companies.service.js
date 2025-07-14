@@ -1,15 +1,60 @@
 
 export const companiesService = {
   getCompanies,
+  getDefaultFilterBy,
 }
 
-async function getCompanies() {
-  const companies = demoCompanies
+async function getCompanies(filterBy = getDefaultFilterBy()) {
+  const companies = _refactorCompanies(demoCompanies)
+
+  const filtered = companies.filter((c) => {
+    const matchesSearch = !filterBy.search || (
+      c.name?.toLowerCase().includes(filterBy.search.toLowerCase()) ||
+      c.legalName?.toLowerCase().includes(filterBy.search.toLowerCase())
+    )
+
+    const matchesCountry = !filterBy.country || c.country === filterBy.country
+    const matchesActive = !filterBy.active || c.active
+    const matchesAI = !filterBy.ai || c.providesAiServices
+    const matchesDPF = !filterBy.dpf || c.isDpfFound
+
+    return matchesSearch && matchesCountry && matchesActive && matchesAI && matchesDPF
+  })
+
+  const sorted = [...filtered].sort((a, b) => {
+    const dir = filterBy.sortDir === 'desc' ? -1 : 1
+    const aVal = a[filterBy.sortBy]?.toString().toLowerCase()
+    const bVal = b[filterBy.sortBy]?.toString().toLowerCase()
+    if (aVal < bVal) return -1 * dir
+    if (aVal > bVal) return 1 * dir
+    return 0
+  })
+
+  const pageSize = 15
+  const startIdx = (filterBy.page - 1) * pageSize
+  const paginated = sorted.slice(startIdx, startIdx + pageSize)
+
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(_refactorCompanies(companies))
-    }, 1000)
+      resolve({
+        companies: paginated,
+        total: filtered.length
+      })
+    }, 500)
   })
+}
+
+function getDefaultFilterBy() {
+  return {
+    search: '',
+    country: '',
+    active: true,
+    ai: false,
+    dpf: false,
+    sortBy: 'name',
+    sortDir: 'asc',
+    page: 1
+  }
 }
 
 function _refactorCompanies(companies) {
@@ -26,16 +71,6 @@ function _refactorCompanies(companies) {
   }))
 }
 
-// Raw company data
-// "active": true,
-// "company_id": "pAuC6RQ71bBG",
-// "company_legal_name": "Market Data Insights LLC",
-// "company_name": "Market Data Insights LLC",
-// "country": "USA",
-// "date_added": "Sun, 26 Jan 2025 16:54:36 GMT",
-// "dpf_found": false,
-// "parent_id": "hDQkIp9PldZO",
-// "provides_ai_services": true
 
 var demoCompanies = [
   {

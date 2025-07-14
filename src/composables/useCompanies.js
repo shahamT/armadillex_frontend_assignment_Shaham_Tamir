@@ -1,23 +1,30 @@
+import { computed, watchEffect } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 import { companiesService } from 'src/services/api/companies.service'
 import { QUERY_KEYS } from './const'
-import { notifyMsgs, notifyService } from 'src/services/notify.service'
 
-export function useCompanies() {
-  // Main query to fetch all companies
+export function useCompanies(filterBy) {
   const companiesQuery = useQuery({
-    queryKey: [QUERY_KEYS.COMPANIES],
+    queryKey: [QUERY_KEYS.COMPANIES, filterBy],
     queryFn: async () => {
-      const companies = await companiesService.getCompanies()
-      notifyService.success(notifyMsgs.companiesFetched)
-      return companies
+      const res = await companiesService.getCompanies(filterBy)
+      return res
     },
+    refetchOnWindowFocus: false,
   })
 
+  watchEffect(() => {
+    companiesQuery.refetch()
+  })
+
+  const companies = computed(() => companiesQuery.data?.value?.companies || [])
+  const total = computed(() => companiesQuery.data?.value?.total || 0)
+  const maxPage = computed(() => Math.ceil(total.value / 15))
+
   return {
-    // Query state
-    companies: companiesQuery.data,
+    companies,
     isLoading: companiesQuery.isLoading,
     error: companiesQuery.error,
+    maxPage,
   }
 }

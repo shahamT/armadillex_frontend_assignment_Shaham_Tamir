@@ -53,6 +53,10 @@ export function isValueEmpty(value) {
   return value === null || value === undefined || value === ''
 }
 
+export function getCountries(){
+    return Object.values(countriesCodeMap).map(c => c.countryName)
+}
+
 export function getFlagUrl(countryCode){
   if (!countryCode || !countriesCodeMap[countryCode]) return ''
   const iso2Code = countriesCodeMap[countryCode].alpha2Code.toLowerCase()
