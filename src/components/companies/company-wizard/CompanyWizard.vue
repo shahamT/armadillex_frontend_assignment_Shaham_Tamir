@@ -4,19 +4,41 @@
     persistent
   >
     <q-card
-      class="q-dialog-plugin"
+      class="q-dialog-plugin q-pa-sm"
       style="min-width: 500px"
     >
+      <q-btn
+        icon="close"
+        flat
+        dense
+        round
+        class="absolute-top-right q-ma-sm z-top"
+        @click="modelValue = false"
+      />
+
       <q-card-section>
+        <!-- step 1 -->
         <div v-if="step === 1">
-          <div class="text-h6">
-            {{ type === 'add' ? 'Add' : 'Update' }} company
+          <div class="text-h3 text-28 q-pb-md">
+            {{ type === 'add' ? 'Add' : 'Update' }} Company
           </div>
-          <StepCompanyName />
+          <StepCompanyName
+            :onNextStep="goNext"
+            v-model:selectedCompany="selectedCompany"
+          />
         </div>
+
+        <!-- step 2 -->
         <div v-else-if="step === 2">
           <p>Step 2: Company Details (Add or Edit)</p>
+           <StepCompanyDetails
+            :onNextStep="goNext"
+            :onPreviousStep="goBack"
+            v-model:selectedCompany="selectedCompany"
+          />
         </div>
+
+        <!-- step 3 -->
         <div v-else-if="step === 3">
           <p>Step 3: Review & Confirm (Add only)</p>
         </div>
@@ -51,6 +73,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import StepCompanyName from './StepCompanyName.vue'
+import StepCompanyDetails from './StepCompanyDetails.vue'
 
 const modelValue = defineModel({ default: false })
 
@@ -68,6 +91,7 @@ const props = defineProps({
 
 const step = ref(1)
 const startStep = computed(() => (props.type === 'edit' ? 2 : 1))
+const selectedCompany = ref(null)
 
 // Initialize step on open
 watch(modelValue, (val) => {
@@ -87,11 +111,6 @@ function goNext() {
     saveCompany()
   }
 }
-
-const nextLabel = computed(() => {
-  if (props.type === 'edit') return 'Save'
-  return step.value === 3 ? 'Save' : 'Next'
-})
 
 function saveCompany() {
   console.log('Saving...', { type: props.type, companyId: props.companyId })

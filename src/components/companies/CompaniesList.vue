@@ -52,9 +52,8 @@
           outline
           label="Clear Sort"
           icon="clear"
-          size="sm"
           color="secondary"
-          class="text-16"
+          class="text-12"
           @click="clearSort"
         />
       </div>
@@ -86,7 +85,7 @@
   </div>
 
   <!-- Pagination -->
-  <div class="col row justify-end items-center">
+  <div class="col row justify-end items-center q-pt-md">
     <q-pagination
       :model-value="filterBy.page"
       @update:model-value="(val) => updateFilterBy('page', val)"

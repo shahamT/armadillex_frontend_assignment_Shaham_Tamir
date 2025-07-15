@@ -2,16 +2,12 @@
   <q-card class="list-container">
     <!-- header -->
     <q-card-section class="row items-center">
-      <!-- <q-icon
-        name="work"
-        size="24px"
-        color="primary"
-      /> -->
+
       <h1 class="text-40">Companies</h1>
 
       <div class="col-auto text-18 q-ml-auto">
         <q-btn
-          filled
+          unelevated
           size="md"
           padding="8px 20px 8px 12px"
           color="brand"
