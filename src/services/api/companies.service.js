@@ -1,6 +1,10 @@
+import { makeId } from "../util.service"
+
 export const companiesService = {
   getCompanies,
   getDefaultFilterBy,
+  saveCompany,
+  getEmptyCompany,
 }
 
 const COMPANIES_STORAGE_KEY = 'COMPANIES'
@@ -68,6 +72,35 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
   })
 }
 
+// Save Company
+function saveCompany(company) {
+  const companies = loadCompaniesFromStorage() || []
+
+  const isNew = !company.company_id
+
+  if (isNew) {
+    company.company_id = makeId()
+    company.date_added = new Date().toUTCString()
+    companies.push(company)
+  } else {
+    const idx = companies.findIndex(c => c.company_id === company.company_id)
+    if (idx !== -1) {
+      companies[idx] = { ...companies[idx], ...company }
+    } else {
+      company.date_added = new Date().toUTCString()
+      companies.push(company)
+    }
+  }
+
+  localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(companies))
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(company)
+    }, 500)
+  })
+}
+
 
 //======== Helpers ========
 function createDemoCompanies() {
@@ -80,6 +113,19 @@ function loadCompaniesFromStorage() {
   return json ? JSON.parse(json) : null
 }
 
+function getEmptyCompany() {
+  return {
+    company_id: null,
+    company_name: '',
+    company_legal_name: '',
+    country: '',
+    active: true,
+    date_added: null,
+    dpf_found: false,
+    provides_ai_services: false,
+    parent_id: null,
+  }
+}
 
 function getDefaultFilterBy() {
   return {

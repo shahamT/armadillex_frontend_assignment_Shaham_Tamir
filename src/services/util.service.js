@@ -53,6 +53,19 @@ export function isValueEmpty(value) {
   return value === null || value === undefined || value === ''
 }
 
+
+export function makeId(length = 12) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let res = ''
+  for (let i = 0; i < length; i++) {
+    res += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return res
+}
+
+
+// Countries helpers
+
 export function getCountries(){
     return Object.values(countriesCodeMap).map(c => c.countryName)
 }
