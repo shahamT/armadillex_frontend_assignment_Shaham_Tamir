@@ -141,7 +141,7 @@ function clearSort() {
 
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .flag-placeholder {
   width: 24px;
 }

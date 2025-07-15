@@ -1,10 +1,11 @@
-import { makeId } from "../util.service"
+import { getFlagUrl, makeId } from '../util.service'
 
 export const companiesService = {
   getCompanies,
   getDefaultFilterBy,
   saveCompany,
   getEmptyCompany,
+  getCompaniesOptions,
 }
 
 const COMPANIES_STORAGE_KEY = 'COMPANIES'
@@ -83,7 +84,7 @@ function saveCompany(company) {
     company.date_added = new Date().toUTCString()
     companies.push(company)
   } else {
-    const idx = companies.findIndex(c => c.company_id === company.company_id)
+    const idx = companies.findIndex((c) => c.company_id === company.company_id)
     if (idx !== -1) {
       companies[idx] = { ...companies[idx], ...company }
     } else {
@@ -100,7 +101,6 @@ function saveCompany(company) {
     }, 500)
   })
 }
-
 
 //======== Helpers ========
 function createDemoCompanies() {
@@ -154,6 +154,17 @@ function _refactorCompanies(companies) {
   }))
 }
 
+//Ai name suggestions
+
+function getCompaniesOptions() {
+  const options = DemoAISuggestions
+  console.log("options: ", options)
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(options)
+    }, 1000)
+  })
+}
 
 //====== Demo Data =======
 var demoCompanies = [
@@ -389,3 +400,61 @@ var demoCompanies = [
     provides_ai_services: true,
   },
 ]
+
+const DemoAISuggestions = [
+  {
+    label: 'EcoFlow',
+    value: 'EcoFlow',
+    legalName: 'EcoFlow Inc.',
+    industry: 'Renewable Energy',
+    description: 'Provides portable and home battery systems for clean energy storage.',
+    country: 'USA',
+    flagURL: getFlagUrl('USA'),
+  },
+  {
+    label: 'FreshBite',
+    value: 'FreshBite',
+    legalName: 'FreshBite Foods Ltd.',
+    industry: 'Food Delivery',
+    description: 'Delivers fresh, chef-prepared meals directly to consumers.',
+    country: 'GBR',
+    flagURL: getFlagUrl('GBR'),
+  },
+  {
+    label: 'SafeLink',
+    value: 'SafeLink',
+    legalName: 'SafeLink Cybersecurity GmbH',
+    industry: 'Cybersecurity',
+    description: 'Offers threat detection and real-time monitoring for enterprise networks.',
+    country: 'DEU',
+    flagURL: getFlagUrl('DEU'),
+  },
+  {
+    label: 'BuildPro',
+    value: 'BuildPro',
+    legalName: 'BuildPro Construction Co.',
+    industry: 'Construction',
+    description: 'Specializes in eco-friendly commercial and residential construction projects.',
+    country: 'CAN',
+    flagURL: getFlagUrl('CAN'),
+  },
+  {
+    label: 'AquaSense',
+    value: 'AquaSense',
+    legalName: 'AquaSense Technologies Ltd.',
+    industry: 'Water Technology',
+    description: 'Develops smart irrigation systems and water-saving solutions for agriculture.',
+    country: 'AUS',
+    flagURL: getFlagUrl('AUS'),
+  },
+  {
+    label: 'MedTrack',
+    value: 'MedTrack',
+    legalName: 'MedTrack Health Pte. Ltd.',
+    industry: 'Healthcare',
+    description: 'Creates wearable devices that monitor patient vitals in real time.',
+    country: 'SGP',
+    flagURL: getFlagUrl('SGP'),
+  },
+]
+

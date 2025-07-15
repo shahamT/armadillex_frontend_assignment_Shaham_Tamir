@@ -1,4 +1,4 @@
-import { countriesCodeMap } from "src/assets/jsons/countries"
+import { countriesCodeMap } from 'src/assets/jsons/countries'
 
 export function convertDateToUtcTS(date) {
   return Date.UTC(
@@ -53,7 +53,6 @@ export function isValueEmpty(value) {
   return value === null || value === undefined || value === ''
 }
 
-
 export function makeId(length = 12) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let res = ''
@@ -63,15 +62,14 @@ export function makeId(length = 12) {
   return res
 }
 
-
 // Countries helpers
 
-export function getCountries(){
-    return Object.values(countriesCodeMap).map(c => c.countryName)
+export function getCountries() {
+  return Object.values(countriesCodeMap).map((c) => c.countryName)
 }
 
-export function getCountriesOptions(){
-     const options =  Object.entries(countriesCodeMap).map(([code, data]) => ({
+export function getCountriesOptions() {
+  const options = Object.entries(countriesCodeMap).map(([code, data]) => ({
     label: data.countryName,
     value: code,
     description: code,
@@ -87,8 +85,9 @@ export function getFlagUrl(countryCode) {
   return iso2Code ? `https://flagcdn.com/w80/${iso2Code}.png` : ''
 }
 
-
-export function getCountryFullName(countryCode){
+export function getCountryFullName(countryCode) {
   if (!countryCode || !countriesCodeMap[countryCode]) return ''
- return countriesCodeMap[countryCode].countryName
+  return countriesCodeMap[countryCode].countryName
 }
+
+

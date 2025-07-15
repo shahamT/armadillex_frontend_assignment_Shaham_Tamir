@@ -1,13 +1,26 @@
 <template>
   <q-card class="list-container">
     <!-- header -->
-    <q-card-section class="row">
+    <q-card-section class="row items-center">
       <!-- <q-icon
         name="work"
         size="24px"
         color="primary"
       /> -->
       <h1 class="text-40">Companies</h1>
+
+      <div class="auto text-18 q-ml-auto">
+        <q-btn
+          filled
+          size="md"
+          padding="8px 20px 8px 12px"
+          color="brand"
+          icon="add"
+          label="Add company"
+          class="text-18 light-radius"
+         @click="openAddCompanyWizard"
+        />
+      </div>
     </q-card-section>
 
     <q-separator />
@@ -30,16 +43,32 @@
       />
     </div>
   </q-card>
+
+  <CompanyWizard
+    v-model="isCompanyWizardOpen"
+    :type="companyWizardType"
+  />
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 
 import CompaniesFilterPanel from 'src/components/companies/CompaniesFilterPanel.vue'
 import CompaniesList from 'src/components/companies/CompaniesList.vue'
+import CompanyWizard from 'src/components/companies/company-wizard/CompanyWizard.vue'
 
+//add company flow
+const isCompanyWizardOpen = ref(false)
+const companyWizardType = ref('add')
+
+function openAddCompanyWizard() {
+  companyWizardType.value = 'add'
+  isCompanyWizardOpen.value = true
+}
+
+//set filter by
 const filterBy = reactive(companiesService.getDefaultFilterBy())
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
 
@@ -48,4 +77,5 @@ function updateFilterBy(key, value) {
 }
 </script>
 
-<style lang="scss"></style>
+<style scoped lang="scss">
+</style>
