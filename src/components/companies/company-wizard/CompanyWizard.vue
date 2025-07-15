@@ -30,8 +30,10 @@
 
         <!-- step 2 -->
         <div v-else-if="step === 2">
-          <p>Step 2: Company Details (Add or Edit)</p>
-           <StepCompanyDetails
+          <div class="text-h3 text-28 q-pb-md">
+            {{ type === 'add' ? 'Add' : 'Update' }} Company
+          </div>
+          <StepCompanyDetails
             :onNextStep="goNext"
             :onPreviousStep="goBack"
             v-model:selectedCompany="selectedCompany"

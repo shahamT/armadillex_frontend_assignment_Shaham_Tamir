@@ -158,7 +158,6 @@ function _refactorCompanies(companies) {
 
 function getCompaniesOptions() {
   const options = DemoAISuggestions
-  console.log("options: ", options)
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(options)
@@ -442,25 +441,25 @@ const DemoAISuggestions = [
     flagURL: getFlagUrl('CAN'),
     aiOption: true,
   },
-  {
-    label: 'AquaSense',
-    value: 'AquaSense',
-    legalName: 'AquaSense Technologies Ltd.',
-    industry: 'Water Technology',
-    description: 'Develops smart irrigation systems and water-saving solutions for agriculture.',
-    country: 'AUS',
-    flagURL: getFlagUrl('AUS'),
-    aiOption: true,
-  },
-  {
-    label: 'MedTrack',
-    value: 'MedTrack',
-    legalName: 'MedTrack Health Pte. Ltd.',
-    industry: 'Healthcare',
-    description: 'Creates wearable devices that monitor patient vitals in real time.',
-    country: 'SGP',
-    flagURL: getFlagUrl('SGP'),
-    aiOption: true,
-  },
+  // {
+  //   label: 'AquaSense',
+  //   value: 'AquaSense',
+  //   legalName: 'AquaSense Technologies Ltd.',
+  //   industry: 'Water Technology',
+  //   description: 'Develops smart irrigation systems and water-saving solutions for agriculture.',
+  //   country: 'AUS',
+  //   flagURL: getFlagUrl('AUS'),
+  //   aiOption: true,
+  // },
+  // {
+  //   label: 'MedTrack',
+  //   value: 'MedTrack',
+  //   legalName: 'MedTrack Health Pte. Ltd.',
+  //   industry: 'Healthcare',
+  //   description: 'Creates wearable devices that monitor patient vitals in real time.',
+  //   country: 'SGP',
+  //   flagURL: getFlagUrl('SGP'),
+  //   aiOption: true,
+  // },
 ]
 
