@@ -162,7 +162,7 @@ function getCompaniesOptions() {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(options)
-    }, 1000)
+    }, 2000)
   })
 }
 
@@ -410,6 +410,7 @@ const DemoAISuggestions = [
     description: 'Provides portable and home battery systems for clean energy storage.',
     country: 'USA',
     flagURL: getFlagUrl('USA'),
+    aiOption: true,
   },
   {
     label: 'FreshBite',
@@ -419,6 +420,7 @@ const DemoAISuggestions = [
     description: 'Delivers fresh, chef-prepared meals directly to consumers.',
     country: 'GBR',
     flagURL: getFlagUrl('GBR'),
+    aiOption: true,
   },
   {
     label: 'SafeLink',
@@ -428,6 +430,7 @@ const DemoAISuggestions = [
     description: 'Offers threat detection and real-time monitoring for enterprise networks.',
     country: 'DEU',
     flagURL: getFlagUrl('DEU'),
+    aiOption: true,
   },
   {
     label: 'BuildPro',
@@ -437,6 +440,7 @@ const DemoAISuggestions = [
     description: 'Specializes in eco-friendly commercial and residential construction projects.',
     country: 'CAN',
     flagURL: getFlagUrl('CAN'),
+    aiOption: true,
   },
   {
     label: 'AquaSense',
@@ -446,6 +450,7 @@ const DemoAISuggestions = [
     description: 'Develops smart irrigation systems and water-saving solutions for agriculture.',
     country: 'AUS',
     flagURL: getFlagUrl('AUS'),
+    aiOption: true,
   },
   {
     label: 'MedTrack',
@@ -455,6 +460,7 @@ const DemoAISuggestions = [
     description: 'Creates wearable devices that monitor patient vitals in real time.',
     country: 'SGP',
     flagURL: getFlagUrl('SGP'),
+    aiOption: true,
   },
 ]
 

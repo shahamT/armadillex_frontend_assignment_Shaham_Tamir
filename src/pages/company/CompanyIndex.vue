@@ -9,7 +9,7 @@
       /> -->
       <h1 class="text-40">Companies</h1>
 
-      <div class="auto text-18 q-ml-auto">
+      <div class="col-auto text-18 q-ml-auto">
         <q-btn
           filled
           size="md"

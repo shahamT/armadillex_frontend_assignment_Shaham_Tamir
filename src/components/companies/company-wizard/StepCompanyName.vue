@@ -1,68 +1,129 @@
 <template>
-  <div class="q-pa-md">
-    <div class="row no-wrap items-center">
-      <div class="full-width">
-        <q-select
-          outlined
-          clearable
-          use-input
-          hide-selected
-          fill-input
-          placeholder="Company Name"
-          :options="companies"
-          v-model="selectedCompany"
-          color="brand"
-          :loading="isLoading"
-          @filter="onFilter"
-          @filter-abort="onFilterAbort"
-        >
-          <template v-slot:option="scope">
-            <q-item v-bind="scope.itemProps">
-              <q-item-section avatar>
-                <q-img :src="scope.opt.flagURL" fit="contain" class="country-flag" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ scope.opt.label }}</q-item-label>
-                <q-item-label caption>{{ scope.opt.description }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </template>
+  <div>
+    <p>Enter company name</p>
 
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">No companies found</q-item-section>
-            </q-item>
-          </template>
-        </q-select>
+    <div class="row no-wrap items-center">
+      <q-select
+        class="full-width text-16"
+        outlined
+        use-input
+        hide-selected
+        fill-input
+        :map-options="false"
+        input-debounce="0"
+        dropdown-icon=""
+        placeholder="Company Name"
+        :options="companies"
+        :model-value="selectedCompany?.label || ''"
+        color="brand"
+        :loading="isLoading"
+        @filter="onFilter"
+        @filter-abort="onFilterAbort"
+        @input-value="onInputChange"
+        @update:model-value="onSelect"
+      >
+        <!-- Custom Option Template -->
+        <template v-slot:option="scope">
+          <q-item v-bind="scope.itemProps">
+            <q-item-section avatar>
+              <q-img
+                :src="scope.opt.flagURL"
+                fit="contain"
+                class="country-flag"
+              />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ scope.opt.label }}</q-item-label>
+              <q-item-label caption>{{ scope.opt.description }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+        
+      </q-select>
+
+      <div class="col-auto text-18 q-ml-sm">
+        <q-btn
+          unelevated
+          size="md"
+          padding="19px 16px"
+          color="brand"
+          label="Continue"
+          class="text-18 light-radius"
+          @click="onContinue"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAiCompaniesSuggestions } from 'src/composables/useAiCompaniesSuggestions'
 
+// State
 const searchTerm = ref('')
 const selectedCompany = ref(null)
 
-const { companies, isLoading, refetch } = useAiCompaniesSuggestions()
+// Suggestions from composable
+const {
+  companies: rawCompanies,
+  isLoading,
+  refetch,
+} = useAiCompaniesSuggestions()
 
-function onFilter(val, done) {
+// Filtered company suggestions
+const companies = computed(() => {
+  if (searchTerm.value.length < 2) return []
+  return rawCompanies.value?.map(c => ({ ...c, aiOption: true })) || []
+})
+
+// Handle typed input
+function onInputChange(val) {
   searchTerm.value = val?.trim() || ''
-  if (searchTerm.value.length >= 2) {
-    refetch().then(() => done())
-  } else {
-    done()
+
+  if (
+    !selectedCompany.value ||
+    selectedCompany.value.label !== val
+  ) {
+    selectedCompany.value = {
+      label: val,
+      value: val,
+      aiOption: false
+    }
   }
 }
 
+// Handle selection from dropdown
+function onSelect(val) {
+  if (val && typeof val === 'object') {
+    selectedCompany.value = val
+  }
+}
+
+// Clear suggestions when input is canceled
 function onFilterAbort() {
   searchTerm.value = ''
 }
+
+// Fetch suggestions on input
+
+function onFilter(val, update) {
+  searchTerm.value = val?.trim() || ''
+  if (searchTerm.value.length >= 2) {
+    refetch().then(() => update())
+  } else {
+    update()
+  }
+}
+
+function onContinue() {
+  console.log('Selected Company:', selectedCompany.value)
+}
 </script>
 
-
 <style scoped lang="scss">
-
+.country-flag {
+  width: 24px;
+  height: 16px;
+}
 </style>
