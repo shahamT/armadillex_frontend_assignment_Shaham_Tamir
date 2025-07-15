@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Enter company name</p>
+    <p class="text-16 text-font-thin q-pb-sm">Enter company name</p>
 
     <div class="row no-wrap items-center">
       <q-select
@@ -52,6 +52,16 @@
           @click="onContinue"
         />
       </div>
+
+    </div>
+    <div v-if="selectedCompany?.aiOption" class="row items-center q-pt-sm">
+      <q-img
+                  src="public/imgs/ai-agent.png"
+                  alt="AI Agent"
+                  fit="contain"
+                  class="ai-avatar col-2 q-mr-md"
+                />
+        <p  class="col-8 text-16 text-font-thin">Great! Our AI agent can seamlessly fill in some details for you now. </p>
     </div>
   </div>
 </template>
@@ -125,5 +135,10 @@ function onContinue() {
 .country-flag {
   width: 24px;
   height: 16px;
+}
+
+.ai-avatar{
+    height: 36px;
+    width: 36px;
 }
 </style>

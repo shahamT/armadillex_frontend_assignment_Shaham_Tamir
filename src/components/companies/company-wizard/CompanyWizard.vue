@@ -22,7 +22,7 @@
         </div>
       </q-card-section>
 
-      <q-card-actions align="between">
+      <!-- <q-card-actions align="between">
         <q-btn
           flat
           label="Back"
@@ -43,7 +43,7 @@
             @click="goNext"
           />
         </div>
-      </q-card-actions>
+      </q-card-actions> -->
     </q-card>
   </q-dialog>
 </template>
