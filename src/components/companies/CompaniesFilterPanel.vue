@@ -204,10 +204,10 @@ const activeFilters = computed(() => {
 
 //clear filters
 function clearFilters() {
-  filterBy.country = ''
-  filterBy.active = false
-  filterBy.ai = false
-  filterBy.dpf = false
+  onUpdate('country', '')
+  onUpdate('active', false)
+  onUpdate('ai', false)
+  onUpdate('dpf', false)
 }
 
 //---- select country filter -----

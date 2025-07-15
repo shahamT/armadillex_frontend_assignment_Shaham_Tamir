@@ -3,10 +3,21 @@ export const companiesService = {
   getDefaultFilterBy,
 }
 
-async function getCompanies(filterBy = getDefaultFilterBy()) {
-  const companies = _refactorCompanies(demoCompanies)
+const COMPANIES_STORAGE_KEY = 'COMPANIES'
 
-  const filtered = companies.filter((c) => {
+//------CRUDL------
+
+//Get Companies
+async function getCompanies(filterBy = getDefaultFilterBy()) {
+  let companies = loadCompaniesFromStorage()
+
+  if (!companies) {
+    companies = createDemoCompanies()
+  }
+
+  const refactored = _refactorCompanies(companies)
+
+  const filtered = refactored.filter((c) => {
     const matchesSearch =
       !filterBy.search ||
       c.name?.toLowerCase().includes(filterBy.search.toLowerCase()) ||
@@ -31,7 +42,6 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     const aVal = a[filterBy.sortBy]
     const bVal = b[filterBy.sortBy]
 
-    // Custom handling for boolean fields
     if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
       if (aVal === bVal) return 0
       return (aVal ? -1 : 1) * dir
@@ -57,6 +67,19 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     }, 500)
   })
 }
+
+
+//======== Helpers ========
+function createDemoCompanies() {
+  localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(demoCompanies))
+  return demoCompanies
+}
+
+function loadCompaniesFromStorage() {
+  const json = localStorage.getItem(COMPANIES_STORAGE_KEY)
+  return json ? JSON.parse(json) : null
+}
+
 
 function getDefaultFilterBy() {
   return {
@@ -85,6 +108,8 @@ function _refactorCompanies(companies) {
   }))
 }
 
+
+//====== Demo Data =======
 var demoCompanies = [
   {
     active: true,
