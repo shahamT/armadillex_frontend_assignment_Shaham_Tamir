@@ -160,7 +160,7 @@
 </template>
 
 <script setup>
-import { useAddCompany } from 'src/composables/useAddCompany'
+import { useSaveCompany } from 'src/composables/useSaveCompany'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 import { getCountriesOptions } from 'src/services/util.service'
@@ -170,17 +170,12 @@ const props = defineProps({
   onNextStep: Function,
   onPreviousStep: Function,
   selectedCompany: Object,
+  savedCompanyId: String,
 })
 
-// const isOn = ref(true)
+const emit = defineEmits(['update:savedCompanyId'])
 
 const newCompany = reactive(companiesService.getEmptyCompany())
-
-console.log('selectedCompany step2: ', props.selectedCompany)
-
-// function onContinue() {
-// props.onNextStep?.()
-// }
 
 //fill new company with selected country from step 1
 watch(
@@ -197,16 +192,23 @@ watch(
   { immediate: true },
 )
 
-const { addCompany, isLoading: isAddLoading } = useAddCompany()
+const { addCompanyAsync, isLoading: isAddLoading } = useSaveCompany()
 
 async function onSubmit() {
-try {
-    await addCompany(newCompany)
+  try {
+    const savedCompany = await addCompanyAsync(newCompany)
+    emit('update:savedCompanyId', savedCompany?.company_id)
     props.onNextStep?.()
   } catch (err) {
     console.error('Failed to add company:', err)
   }
 }
+
+// function resetForm() {
+//   Object.assign(newCompany, companiesService.getEmptyCompany())
+//   selectedParentCompany.value = null
+//   selectedCountryOption.value = null
+// }
 
 //---- select parent company -----
 

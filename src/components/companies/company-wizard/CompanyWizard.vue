@@ -37,37 +37,20 @@
             :onNextStep="goNext"
             :onPreviousStep="goBack"
             v-model:selectedCompany="selectedCompany"
+            v-model:savedCompanyId="savedCompanyId"
           />
         </div>
 
         <!-- step 3 -->
         <div v-else-if="step === 3">
           <p>Step 3: Review & Confirm (Add only)</p>
+          <StepCompanyActivate
+            :onNextStep="goNext"
+            v-model:savedCompanyId="savedCompanyId"
+          />
         </div>
       </q-card-section>
 
-      <!-- <q-card-actions align="between">
-        <q-btn
-          flat
-          label="Back"
-          @click="goBack"
-          :disable="step === startStep"
-        />
-        <div>
-          <q-btn
-            flat
-            label="Cancel"
-            color="primary"
-            @click="modelValue = false"
-          />
-          <q-btn
-            flat
-            :label="nextLabel"
-            color="primary"
-            @click="goNext"
-          />
-        </div>
-      </q-card-actions> -->
     </q-card>
   </q-dialog>
 </template>
@@ -76,6 +59,7 @@
 import { ref, computed, watch } from 'vue'
 import StepCompanyName from './StepCompanyName.vue'
 import StepCompanyDetails from './StepCompanyDetails.vue'
+import StepCompanyActivate from './StepCompanyActivate.vue'
 
 const modelValue = defineModel({ default: false })
 
@@ -94,6 +78,7 @@ const props = defineProps({
 const step = ref(1)
 const startStep = computed(() => (props.type === 'edit' ? 2 : 1))
 const selectedCompany = ref(null)
+const savedCompanyId = ref(null)
 
 // Initialize step on open
 watch(modelValue, (val) => {
@@ -110,13 +95,8 @@ function goNext() {
   if (step.value < 3) {
     step.value++
   } else {
-    saveCompany()
+    step.value = 1
   }
-}
-
-function saveCompany() {
-  console.log('Saving...', { type: props.type, companyId: props.companyId })
-  modelValue.value = false
 }
 </script>
 

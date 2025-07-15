@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { companiesService } from 'src/services/api/companies.service'
 import { QUERY_KEYS } from './const'
+import { notifyMsgs, notifyService } from 'src/services/notify.service'
 
-export function useAddCompany() {
+export function useSaveCompany() {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
@@ -11,6 +12,10 @@ export function useAddCompany() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPANIES] })
+      notifyService.success(notifyMsgs.companyAdded)
+    },
+    onError: () => {
+      notifyService.error(notifyMsgs.companyUpdatedFail)
     },
   })
 

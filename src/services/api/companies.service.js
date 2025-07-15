@@ -98,7 +98,7 @@ function saveCompany(company) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(company)
-    }, 500)
+    }, 1000)
   })
 }
 
