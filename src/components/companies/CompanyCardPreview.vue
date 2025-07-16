@@ -1,4 +1,5 @@
 <template>
+  <router-link :to="{ name: 'company-details', params: { id: company.id } }">
   <q-card
     @click="viewCompany(company.id)"
     class="company-card-preview flex items-center"
@@ -78,6 +79,7 @@
       </div>
     </div>
   </q-card>
+  </router-link>
 </template>
 
 <script setup>

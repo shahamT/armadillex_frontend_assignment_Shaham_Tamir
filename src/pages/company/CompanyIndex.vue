@@ -32,12 +32,23 @@
     <div class="companies-list-wrapper column q-pa-md">
       <CompaniesList
         :companies="companies"
-        :maxPage="maxPage"
         :filterBy="filterBy"
         :updateFilterBy="updateFilterBy"
         :isLoading="isLoading"
       />
     </div>
+
+    <div class="row justify-end q-mt-auto q-pa-md">
+    <q-pagination
+      :model-value="filterBy.page"
+      @update:model-value="(val) => updateFilterBy('page', val)"
+      :max="maxPage"
+      direction-links
+      gutter="8px"
+      color="brand"
+    />
+  </div>
+
   </q-card>
 
   <CompanyWizard

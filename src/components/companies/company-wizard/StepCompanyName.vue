@@ -21,7 +21,6 @@
         @filter-abort="onFilterAbort"
         @input-value="onInputChange"
         @update:model-value="onSelect"
-        @blur="onBlur"
       >
         <template v-slot:before-options>
           <div class="q-pa-sm text-primary text-subtitle2 bg-info">
@@ -71,7 +70,6 @@
           :disable="
             !props.selectedCompany || props.selectedCompany.label.length < 2
           "
-          @mousedown.prevent
         />
       </div>
     </div>
@@ -146,11 +144,6 @@ function onInputChange(val) {
       aiOption: false,
     })
   }
-}
-
-function onBlur() {
-  console.log('props.selectedCompany: ', props.selectedCompany.value)
-  console.log('searchTerm.value: ', searchTerm.value)
 }
 
 // Handle selection

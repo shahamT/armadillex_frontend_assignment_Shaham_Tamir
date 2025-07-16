@@ -66,7 +66,18 @@
     v-if="!isLoading"
     class="companies-list column q-gutter-y-sm q-pt-sm scroll"
   >
+    <div v-if="companies.length === 0" class="column items-center justify-center text-center">
+      <q-img
+        src="public/empty-states/empty-state-no-result.svg"
+        spinner-color="grey-5"
+        style="width: 200px; height: 200px"
+        fit="contain"
+      />
+      <p class="text-18 text-font-thin text-secondary">No companies to show</p>
+    </div>
+
     <CompanyCardPreview
+      v-else
       v-for="company in companies"
       :key="company.id"
       :company="company"
@@ -83,18 +94,6 @@
       size="4em"
     />
   </div>
-
-  <!-- Pagination -->
-  <div class="col row justify-end items-center q-pt-md">
-    <q-pagination
-      :model-value="filterBy.page"
-      @update:model-value="(val) => updateFilterBy('page', val)"
-      :max="maxPage"
-      direction-links
-      gutter="8px"
-      color="brand"
-    />
-  </div>
 </template>
 
 <script setup>
@@ -107,11 +106,11 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  maxPage: {
-    type: Number,
+  isLoading: {
+    type: Boolean,
     required: true,
   },
-  filterBy: {
+   filterBy: {
     type: Object,
     required: true,
   },
@@ -119,17 +118,12 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  isLoading: {
-    type: Boolean,
-    required: true,
-  },
+  
 })
-
 
 const isCustomSortApplied = computed(() => {
   return (
-    props.filterBy.sortBy !== 'dateAdded' ||
-    props.filterBy.sortDir !== 'desc'
+    props.filterBy.sortBy !== 'dateAdded' || props.filterBy.sortDir !== 'desc'
   )
 })
 
@@ -137,7 +131,6 @@ function clearSort() {
   props.updateFilterBy('sortBy', 'dateAdded')
   props.updateFilterBy('sortDir', 'desc')
 }
-
 </script>
 
 <style scoped lang="scss">
