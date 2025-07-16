@@ -21,6 +21,7 @@
         @filter-abort="onFilterAbort"
         @input-value="onInputChange"
         @update:model-value="onSelect"
+        @blur="onBlur"
       >
         <template v-slot:before-options>
           <div class="q-pa-sm text-primary text-subtitle2 bg-info">
@@ -67,7 +68,10 @@
           label="Continue"
           class="text-18 light-radius"
           @click="onContinue"
-          :disable="searchTerm.length < 2"
+          :disable="
+            !props.selectedCompany || props.selectedCompany.label.length < 2
+          "
+          @mousedown.prevent
         />
       </div>
     </div>
@@ -94,12 +98,12 @@
 </template>
 
 <script setup>
-import { ref, computed  } from 'vue'
+import { ref, computed } from 'vue'
 import { useAiCompaniesSuggestions } from 'src/composables/useAiCompaniesSuggestions'
 
 const props = defineProps({
   onNextStep: Function,
-  selectedCompany: Object
+  selectedCompany: Object,
 })
 
 const emit = defineEmits(['update:selectedCompany'])
@@ -144,21 +148,24 @@ function onInputChange(val) {
   }
 }
 
+function onBlur() {
+  console.log('props.selectedCompany: ', props.selectedCompany.value)
+  console.log('searchTerm.value: ', searchTerm.value)
+}
+
 // Handle selection
 function onSelect(val) {
   if (val && typeof val === 'object') {
-   emit('update:selectedCompany', val)
+    emit('update:selectedCompany', val)
   }
 }
 
-
 function onContinue() {
-props.onNextStep?.()
+  props.onNextStep?.()
 }
 </script>
 
 <style scoped lang="scss">
-
 .ai-avatar-big {
   height: 36px;
   width: 36px;

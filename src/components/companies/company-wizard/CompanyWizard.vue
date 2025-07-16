@@ -45,7 +45,7 @@
         <div v-else-if="step === 3">
           <StepCompanyActivate
             v-model:savedCompanyId="savedCompanyId"
-            :closeWizard="() => modelValue = false"
+            :closeWizard="() => (modelValue = false)"
           />
         </div>
       </q-card-section>
@@ -82,6 +82,8 @@ const savedCompanyId = ref(null)
 watch(modelValue, (val) => {
   if (val) {
     step.value = startStep.value
+    selectedCompany.value = null
+    savedCompanyId.value = null
   }
 })
 
