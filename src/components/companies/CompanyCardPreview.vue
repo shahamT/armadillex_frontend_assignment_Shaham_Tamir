@@ -1,7 +1,6 @@
 <template>
   <router-link :to="{ name: 'company-details', params: { id: company.id } }">
   <q-card
-    @click="viewCompany(company.id)"
     class="company-card-preview flex items-center"
     style="height: 48px"
     bordered
@@ -91,10 +90,6 @@ defineProps({
     required: true,
   },
 })
-
-function viewCompany(id) {
-  console.log('id: ', id)
-}
 </script>
 
 <style lang="scss">

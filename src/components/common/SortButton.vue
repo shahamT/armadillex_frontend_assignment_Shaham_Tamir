@@ -1,6 +1,5 @@
 <template>
   <q-btn
-    
     flat
     dense
     round
@@ -9,8 +8,18 @@
     :color="isActive ? 'brand' : 'grey-6'"
     @click="toggleSort"
     class="q-ml-xs"
-     :class="isActive ? 'bg-accent' : 'none'"
-  />
+    :class="isActive ? 'bg-accent' : 'none'"
+  >
+    <q-tooltip
+      v-if="tooltipLabel"
+      class="text-body2"
+      anchor="top middle"
+      self="bottom middle"
+      :offset="[0, 8]"
+    >
+      {{ tooltipLabel }}
+    </q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>
@@ -20,6 +29,7 @@ const props = defineProps({
   sortKey: { type: String, required: true },
   filterBy: { type: Object, required: true },
   updateFilterBy: { type: Function, required: true },
+  tooltipLabel: { type: String, required: false },
 })
 
 const isActive = computed(() => props.filterBy.sortBy === props.sortKey)

@@ -1,151 +1,230 @@
 <template>
   <q-card class="card-container">
-     <div
-    v-if="isLoading"
-    class="q-pa-xl q-ma-xl flex full-width items-center justify-center"
-  >
-    <q-spinner
-      color="brand"
-      size="4em"
-    />
-  </div>
+    <!-- loading state -->
+    <div
+      v-if="isLoading"
+      class="q-pa-xl q-ma-xl flex full-width items-center justify-center"
+    >
+      <q-spinner
+        color="brand"
+        size="4em"
+      />
+    </div>
+
+    <!-- page content -->
     <div
       v-else
       class="q-pa-lg"
     >
-      <div>
-        <q-breadcrumbs class="q-mb-md">
-          <q-breadcrumbs-el
-            class="text-brand link"
-            label="Companies"
-            to="/company"
-          />
-          <q-breadcrumbs-el :label="company.name" />
-        </q-breadcrumbs>
+      <!-- bread crumbs + back button -->
+      <q-breadcrumbs class="q-mb-md">
+        <q-breadcrumbs-el
+          class="text-brand link"
+          label="Companies"
+          to="/company"
+        />
+        <q-breadcrumbs-el :label="company.name" />
+      </q-breadcrumbs>
 
-        <q-btn
+      <q-btn
+        flat
+        dense=""
+        color="primary"
+        icon="keyboard_backspace"
+        :to="{ name: ROUTES.COMPANY }"
+      >
+        Back</q-btn
+      >
+
+      <!-- company details -->
+      <h2 class="q-mb-lg text-52">{{ company.name }}</h2>
+
+      <div class="column q-gutter-y-lg">
+        <q-card
+          bordered
           flat
-          dense=""
-          color="primary"
-          icon="keyboard_backspace"
-          :to="{ name: ROUTES.COMPANY }"
+          class="q-pa-lg"
         >
-          Back</q-btn
-        >
+          <!-- basic details -->
+          <h3 class="text-20 text-font-medium q-mb-md">Basic Details</h3>
 
-        <h2 class="q-mb-lg text-52">{{ company.name }}</h2>
+          <div class="row q-gutter-x-xl">
+            <div class="q-mr-xl">
+              <p class="text-16 text-secondary q-mb-xs">Legal Name</p>
+              <p class="text-18 text-primary">{{ company.legalName }}</p>
+            </div>
 
-        <div class="column q-gutter-y-lg">
-          <q-card
-            bordered
-            flat
-            class="q-pa-lg"
-          >
-            <h3 class="text-20 text-font-medium q-mb-md">Basic Details</h3>
-            <div class="row q-gutter-x-xl">
-              <div class="q-mr-xl">
-                <p class="text-16 text-secondary">Legal Name</p>
-                <p class="text-18 text-primary">{{ company.legalName }}</p>
-              </div>
-              <q-separator
-                vertical
-                color="brand"
-              />
-              <div class="q-mr-xl">
-                <p class="text-16 text-secondary">Country</p>
-                <div class="row items-center q-gutter-x-sm">
-                  <q-img
-                    class="country-flag"
-                    :src="getFlagUrl(company.country)"
-                    fit="contain"
-                    spinner-color="grey-5"
-                  ></q-img>
-                  <p class="text-18 text-primary">
-                    {{ getCountryFullName(company.country) }}
-                  </p>
-                </div>
-              </div>
+            <q-separator
+              vertical
+              color="brand"
+            />
 
-              <q-separator vertical />
+            <div class="q-mr-xl">
+              <p class="text-16 text-secondary q-mb-xs">Country</p>
 
-              <div class="q-mr-xl">
-                <p class="text-16 text-secondary">Parent Company</p>
-
-                <q-spinner
-                  v-if="isParentCompanyLoading"
-                  color="brand"
-                  size="1em"
-                />
-
-                <router-link
-                  v-else-if="company.parentId && parentCompany"
-                  :to="{
-                    name: 'company-details',
-                    params: { id: parentCompany.id },
-                  }"
-                  class="text-18 text-primary text-brand link"
-                >
-                  {{ parentCompany.name }}
-                </router-link>
-
-                <p
-                  v-else
-                  class="text-18 text-italic text-secondary"
-                >
-                  No Parent Company
+              <div class="row items-center q-gutter-x-sm">
+                <q-img
+                  class="country-flag"
+                  :src="getFlagUrl(company.country)"
+                  fit="contain"
+                  spinner-color="grey-5"
+                ></q-img>
+                <p class="text-18 text-primary">
+                  {{ getCountryFullName(company.country) }}
                 </p>
               </div>
             </div>
-          </q-card>
-          <q-card
-            bordered
-            flat
-            class="q-pa-lg"
-          >
-            <h3 class="text-20 text-font-medium q-mb-md">Attributes</h3>
-            <div class="row q-gutter-x-xl">
-              <div>
-                <p class="text-16 text-secondary">Legal Name</p>
-                <p class="text-18 text-primary">{{ company.legalName }}</p>
-              </div>
-              <q-separator vertical />
-              <div>
-                <p class="text-16 text-secondary">Country</p>
-                <p class="text-18 text-primary">{{ company.country }}</p>
-              </div>
+
+            <q-separator vertical />
+
+            <div class="q-mr-xl">
+              <p class="text-16 text-secondary q-mb-xs">Parent Company</p>
+
+              <q-spinner
+                v-if="isParentCompanyLoading"
+                color="brand"
+                size="1em"
+              />
+
+              <router-link
+                v-else-if="company.parentId && parentCompany"
+                :to="{
+                  name: 'company-details',
+                  params: { id: parentCompany.id },
+                }"
+                class="text-18 text-primary text-brand link"
+              >
+                {{ parentCompany.name }}
+              </router-link>
+
+              <p
+                v-else
+                class="text-18 text-italic text-secondary"
+              >
+                No Parent Company
+              </p>
             </div>
-          </q-card>
-          <q-card
-            bordered
-            flat
-            class="q-pa-lg"
-          >
-            <h3 class="text-20 text-font-medium q-mb-md">
-              Subsidiary Companies
-            </h3>
-            <div class="row q-gutter-x-xl">
-              <div>
-                <p class="text-16 text-secondary">Legal Name</p>
-                <p class="text-18 text-primary">{{ company.legalName }}</p>
-              </div>
-              <q-separator vertical />
-              <div>
-                <p class="text-16 text-secondary">Country</p>
-                <p class="text-18 text-primary">{{ company.country }}</p>
-              </div>
+          </div>
+        </q-card>
+
+        <!-- Attributes -->
+        <q-card
+          bordered
+          flat
+          class="q-pa-lg"
+        >
+          <h3 class="text-20 text-font-medium q-mb-md">Attributes</h3>
+          <div class="row q-gutter-x-xl">
+            <div class="q-mr-xl">
+              <p class="text-16 text-secondary q-mb-xs">Has DPF</p>
+
+              <q-badge
+                v-if="company.isDpfFound"
+                class="positive-badge text-16 row center-items q-pl-sm q-pr-sm"
+              >
+                <q-icon
+                  name="check_circle"
+                  class="q-mr-sm"
+                />
+                DPF Found
+              </q-badge>
+              <q-badge
+                v-else
+                class="grayed-badge text-16 text-secondary row center-items q-pl-sm q-pr-sm"
+              >
+                <q-icon
+                  name="cancel"
+                  class="q-mr-sm"
+                />
+                No DPF Found
+              </q-badge>
             </div>
-          </q-card>
-        </div>
+
+            <q-separator vertical />
+
+            <div class="q-mr-xl">
+              <p class="text-16 text-secondary q-mb-xs">AI Services</p>
+
+              <q-badge
+                v-if="company.providesAiServices"
+                class="ai-badge text-16 row center-items q-pl-sm q-pr-sm"
+              >
+                <q-icon
+                  name="smart_toy"
+                  class="q-mr-sm"
+                />
+                Uses AI Services
+              </q-badge>
+              <q-badge
+                v-else
+                class="grayed-badge text-16 text-secondary row center-items q-pl-sm q-pr-sm"
+              >
+                <q-icon
+                  name="cancel"
+                  class="q-mr-sm"
+                />
+                Doesn't use AI Services
+              </q-badge>
+            </div>
+          </div>
+        </q-card>
+
+        <!-- Subsidiary Companies -->
+        <q-card
+          bordered
+          flat
+          class="q-pa-lg"
+        >
+          <h3 class="text-20 text-font-medium q-mb-md">Subsidiary Companies</h3>
+
+          <div
+            v-if="isChildCompaniesLoading"
+            class="q-pa-lg flex full-width items-center justify-center"
+          >
+            <q-spinner
+              color="brand"
+              size="4em"
+            />
+          </div>
+
+          <!-- empty state for child companies -->
+          <div
+            v-else-if="childCompanies.length === 0"
+            class="column items-center justify-center text-center"
+          >
+            <q-img
+              src="public/empty-states/empty-state-no-companies.svg"
+              spinner-color="grey-5"
+              style="width: 100px; height: 100px"
+              fit="contain"
+            />
+            <p class="text-18 text-font-thin text-secondary">
+              This company does not have registered Subsidiary Companies
+            </p>
+          </div>
+
+          <!-- child companies list -->
+          <CompaniesList
+            v-else
+            :companies="childCompanies"
+            :filterBy="filterBy"
+            :updateFilterBy="updateFilterBy"
+            :isLoading="isChildCompaniesLoading"
+          />
+        </q-card>
       </div>
     </div>
   </q-card>
 </template>
 
 <script setup>
+import CompaniesList from 'src/components/companies/CompaniesList.vue'
+import { useCompanies } from 'src/composables/useCompanies'
 import { useGetCompany } from 'src/composables/useGetCompany'
 import { ROUTES } from 'src/router/const'
+import { companiesService } from 'src/services/api/companies.service'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
-import { computed, watch } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -163,16 +242,37 @@ const {
   company: parentCompany,
   isLoading: isParentCompanyLoading,
   refetch: refetchParentCompany,
-} = useGetCompany(null)  // starts with null
+} = useGetCompany(null) // starts with null
 
 // When parentId changes, trigger refetch
-watch(parentId, async (newId) => {
-  if (newId) {
-    await refetchParentCompany({ queryKey: ['company', newId] })
-  }
-}, { immediate: true })
+watch(
+  parentId,
+  async (newId) => {
+    if (newId) {
+      await refetchParentCompany({ queryKey: ['company', newId] })
+    }
+  },
+  { immediate: true },
+)
 
 //child companies
+const filterBy = reactive(companiesService.getDefaultFilterBy())
+const { companies: childCompanies, isLoading: isChildCompaniesLoading } =
+  useCompanies(filterBy)
+
+watch(
+  () => company.value?.id,
+  (newId) => {
+    if (newId) {
+      filterBy.parentCompany = newId
+    }
+  },
+  { immediate: true },
+)
+
+function updateFilterBy(key, value) {
+  filterBy[key] = value
+}
 </script>
 
 <style scoped lang="scss">
@@ -190,5 +290,19 @@ watch(parentId, async (newId) => {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.ai-badge {
+  background: linear-gradient(135deg, #e0eaff, #f3e5ff);
+  color: var(--q-brand);
+}
+
+.grayed-badge {
+  background-color: #e4e4e4;
+}
+
+.positive-badge {
+  background-color: #cdeedd;
+  color: var(--q-success-dark);
 }
 </style>

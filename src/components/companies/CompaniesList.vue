@@ -14,6 +14,7 @@
             :sortKey="'country'"
             :filterBy="filterBy"
             :updateFilterBy="updateFilterBy"
+            tooltipLabel="Sort by country"
           />
         </div>
       </div>
@@ -24,6 +25,7 @@
           :sortKey="'name'"
           :filterBy="filterBy"
           :updateFilterBy="updateFilterBy"
+          tooltipLabel="Sort by company name"
         />
       </div>
 
@@ -33,6 +35,7 @@
           :sortKey="'isDpfFound'"
           :filterBy="filterBy"
           :updateFilterBy="updateFilterBy"
+          tooltipLabel="Sort by DPF status"
         />
       </div>
 
@@ -42,6 +45,7 @@
           :sortKey="'providesAiServices'"
           :filterBy="filterBy"
           :updateFilterBy="updateFilterBy"
+          tooltipLabel="Sort by AI services status"
         />
       </div>
 
@@ -66,7 +70,11 @@
     v-if="!isLoading"
     class="companies-list column q-gutter-y-sm q-pt-sm scroll"
   >
-    <div v-if="companies.length === 0" class="column items-center justify-center text-center">
+  <!-- empty state -->
+    <div
+      v-if="companies.length === 0"
+      class="column items-center justify-center text-center"
+    >
       <q-img
         src="public/empty-states/empty-state-no-result.svg"
         spinner-color="grey-5"
@@ -76,6 +84,7 @@
       <p class="text-18 text-font-thin text-secondary">No companies to show</p>
     </div>
 
+    <!-- items -->
     <CompanyCardPreview
       v-else
       v-for="company in companies"
@@ -110,7 +119,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-   filterBy: {
+  filterBy: {
     type: Object,
     required: true,
   },
@@ -118,7 +127,6 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  
 })
 
 const isCustomSortApplied = computed(() => {

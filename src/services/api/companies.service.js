@@ -34,13 +34,16 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     const matchesActive = filterBy.active || c.active
     const matchesAI = !filterBy.ai || c.providesAiServices
     const matchesDPF = !filterBy.dpf || c.isDpfFound
+    const matchesParent =
+      !filterBy.parentCompany || c.parentId === filterBy.parentCompany
 
     return (
       matchesSearch &&
       matchesCountry &&
       matchesActive &&
       matchesAI &&
-      matchesDPF
+      matchesDPF &&
+      matchesParent
     )
   })
 
@@ -87,7 +90,7 @@ function saveCompany(company) {
   if (isNew) {
     rawCompany.company_id = makeId()
     rawCompany.date_added = new Date().toUTCString()
-    companies.push(rawCompany)
+    companies.unshift(rawCompany)
   } else {
     const idx = companies.findIndex(
       (c) => c.company_id === rawCompany.company_id,
@@ -96,7 +99,7 @@ function saveCompany(company) {
       companies[idx] = { ...companies[idx], ...rawCompany }
     } else {
       rawCompany.date_added = new Date().toUTCString()
-      companies.push(rawCompany)
+      companies.unshift(rawCompany)
     }
   }
 
@@ -155,6 +158,7 @@ function getDefaultFilterBy() {
     active: false,
     ai: false,
     dpf: false,
+    parentCompany: null,
     sortBy: 'dateAdded',
     sortDir: 'desc',
     page: 1,
