@@ -43,14 +43,12 @@
 
         <!-- step 3 -->
         <div v-else-if="step === 3">
-          <p>Step 3: Review & Confirm (Add only)</p>
           <StepCompanyActivate
-            :onNextStep="goNext"
             v-model:savedCompanyId="savedCompanyId"
+            :closeWizard="() => modelValue = false"
           />
         </div>
       </q-card-section>
-
     </q-card>
   </q-dialog>
 </template>

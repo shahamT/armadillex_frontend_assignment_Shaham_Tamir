@@ -7,12 +7,16 @@ export function useSaveCompany() {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (newCompany) => {
-      return await companiesService.saveCompany(newCompany)
+    mutationFn: async (company) => {
+      return await companiesService.saveCompany(company)
     },
-    onSuccess: () => {
+    onSuccess: (savedCompany, originalCompany) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPANIES] })
-      notifyService.success(notifyMsgs.companyAdded)
+
+      const isNew = !originalCompany.id
+      notifyService.success(
+        isNew ? notifyMsgs.companyAdded : notifyMsgs.companyUpdated,
+      )
     },
     onError: () => {
       notifyService.error(notifyMsgs.companyUpdatedFail)
@@ -20,8 +24,8 @@ export function useSaveCompany() {
   })
 
   return {
-    addCompany: mutation.mutate,
-    addCompanyAsync: mutation.mutateAsync,
+    saveCompany: mutation.mutate,
+    saveCompanyAsync: mutation.mutateAsync,
     isLoading: mutation.isPending,
     isError: mutation.isError,
     isSuccess: mutation.isSuccess,

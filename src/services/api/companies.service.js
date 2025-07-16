@@ -4,6 +4,7 @@ export const companiesService = {
   getCompanies,
   getDefaultFilterBy,
   saveCompany,
+  getCompanyById,
   getEmptyCompany,
   getCompaniesOptions,
 }
@@ -13,6 +14,7 @@ const COMPANIES_STORAGE_KEY = 'COMPANIES'
 //------CRUDL------
 
 //Get Companies
+
 async function getCompanies(filterBy = getDefaultFilterBy()) {
   let companies = loadCompaniesFromStorage()
 
@@ -74,22 +76,27 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
 }
 
 // Save Company
+
 function saveCompany(company) {
   const companies = loadCompaniesFromStorage() || []
 
-  const isNew = !company.company_id
+  const rawCompany = _refactorToRawCompany(company)
+
+  const isNew = !rawCompany.company_id
 
   if (isNew) {
-    company.company_id = makeId()
-    company.date_added = new Date().toUTCString()
-    companies.push(company)
+    rawCompany.company_id = makeId()
+    rawCompany.date_added = new Date().toUTCString()
+    companies.push(rawCompany)
   } else {
-    const idx = companies.findIndex((c) => c.company_id === company.company_id)
+    const idx = companies.findIndex(
+      (c) => c.company_id === rawCompany.company_id,
+    )
     if (idx !== -1) {
-      companies[idx] = { ...companies[idx], ...company }
+      companies[idx] = { ...companies[idx], ...rawCompany }
     } else {
-      company.date_added = new Date().toUTCString()
-      companies.push(company)
+      rawCompany.date_added = new Date().toUTCString()
+      companies.push(rawCompany)
     }
   }
 
@@ -97,7 +104,21 @@ function saveCompany(company) {
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(company)
+      resolve(_refactorCompany(rawCompany))
+    }, 1000)
+  })
+}
+
+//get company by ID
+
+function getCompanyById(companyId) {
+  const companies = loadCompaniesFromStorage() || []
+  const company = companies.find((c) => c.company_id === companyId) || null
+  const formatted = _refactorCompany(company)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(formatted)
     }, 1000)
   })
 }
@@ -115,15 +136,15 @@ function loadCompaniesFromStorage() {
 
 function getEmptyCompany() {
   return {
-    company_id: null,
-    company_name: '',
-    company_legal_name: '',
+    id: null,
+    name: '',
+    legalName: '',
     country: '',
-    active: true,
-    date_added: null,
-    dpf_found: false,
-    provides_ai_services: false,
-    parent_id: null,
+    active: false,
+    dateAdded: null,
+    isDpfFound: false,
+    providesAiServices: false,
+    parentId: null,
   }
 }
 
@@ -140,6 +161,7 @@ function getDefaultFilterBy() {
   }
 }
 
+//refactor array of companies
 function _refactorCompanies(companies) {
   return companies.map((company) => ({
     id: company.company_id,
@@ -152,6 +174,35 @@ function _refactorCompanies(companies) {
     parentId: company.parent_id,
     providesAiServices: company.provides_ai_services,
   }))
+}
+
+//refactor single company
+function _refactorCompany(company) {
+  return {
+    id: company.company_id,
+    active: company.active,
+    name: company.company_name,
+    legalName: company.company_legal_name,
+    country: company.country,
+    dateAdded: company.date_added,
+    isDpfFound: company.dpf_found,
+    parentId: company.parent_id,
+    providesAiServices: company.provides_ai_services,
+  }
+}
+//refactor single company to raw
+function _refactorToRawCompany(formatted) {
+  return {
+    company_id: formatted.id,
+    company_name: formatted.name,
+    company_legal_name: formatted.legalName,
+    country: formatted.country,
+    active: formatted.active,
+    date_added: formatted.dateAdded,
+    dpf_found: formatted.isDpfFound,
+    provides_ai_services: formatted.providesAiServices,
+    parent_id: formatted.parentId,
+  }
 }
 
 //Ai name suggestions
@@ -406,7 +457,8 @@ const DemoAISuggestions = [
     value: 'EcoFlow',
     legalName: 'EcoFlow Inc.',
     industry: 'Renewable Energy',
-    description: 'Provides portable and home battery systems for clean energy storage.',
+    description:
+      'Provides portable and home battery systems for clean energy storage.',
     country: 'USA',
     flagURL: getFlagUrl('USA'),
     aiOption: true,
@@ -426,7 +478,8 @@ const DemoAISuggestions = [
     value: 'SafeLink',
     legalName: 'SafeLink Cybersecurity GmbH',
     industry: 'Cybersecurity',
-    description: 'Offers threat detection and real-time monitoring for enterprise networks.',
+    description:
+      'Offers threat detection and real-time monitoring for enterprise networks.',
     country: 'DEU',
     flagURL: getFlagUrl('DEU'),
     aiOption: true,
@@ -436,7 +489,8 @@ const DemoAISuggestions = [
     value: 'BuildPro',
     legalName: 'BuildPro Construction Co.',
     industry: 'Construction',
-    description: 'Specializes in eco-friendly commercial and residential construction projects.',
+    description:
+      'Specializes in eco-friendly commercial and residential construction projects.',
     country: 'CAN',
     flagURL: getFlagUrl('CAN'),
     aiOption: true,
@@ -462,4 +516,3 @@ const DemoAISuggestions = [
   //   aiOption: true,
   // },
 ]
-

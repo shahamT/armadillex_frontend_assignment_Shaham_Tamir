@@ -63,7 +63,7 @@
 
 //container types
 .list-container {
-  // max-height: calc(100vh - 4rem - 32px);
+  min-height: calc(100vh - 4rem - 32px);
   display: flex;
   flex-direction: column;
 }

@@ -3,9 +3,9 @@
     ref="companyForm"
     @submit.prevent="onSubmit"
   >
-    <p class="text-16 text-font-thin q-pb-xs q-ml-sm">Company Name</p>
+    <p class="text-16 text-font-thin q-pb-xs q-ml-sm">Company Name *</p>
     <q-input
-      v-model="newCompany.company_name"
+      v-model="newCompany.name"
       class="text-18 q-pb-lg"
       outlined
       placeholder="Company Name"
@@ -17,9 +17,9 @@
     >
     </q-input>
 
-    <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">Legal Name</p>
+    <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">Legal Name *</p>
     <q-input
-      v-model="newCompany.company_legal_name"
+      v-model="newCompany.legalName"
       class="text-18 q-pb-lg"
       outlined
       placeholder="Legal Name"
@@ -29,7 +29,9 @@
     </q-input>
 
     <!-- Country select -->
-    <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">Country</p>
+    <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">
+      Headquarters Country *
+    </p>
 
     <q-select
       class="text-18"
@@ -40,7 +42,7 @@
       use-input
       hide-selected
       fill-input
-      placeholder="Filter by country"
+      placeholder="Select Country"
       :options="filteredOptions"
       color="brand"
       @filter="filterFn"
@@ -91,9 +93,7 @@
     <q-select
       class="text-18 q-pb-lg"
       v-model="selectedParentCompany"
-      @update:model-value="
-        (val) => onUpdate('parent_company_id', val?.id || null)
-      "
+      @update:model-value="(val) => onUpdate('parentId', val?.id || null)"
       outlined
       use-input
       fill-input
@@ -129,7 +129,7 @@
 
     <div class="row center-items q-pb-md">
       <q-toggle
-        v-model="newCompany.dpf_found"
+        v-model="newCompany.isDpfFound"
         color="brand"
         keep-color
         label="Has DPF"
@@ -138,7 +138,7 @@
 
       <!-- AI Toggle -->
       <q-toggle
-        v-model="newCompany.provides_ai_services"
+        v-model="newCompany.providesAiServices"
         color="brand"
         keep-color
         label="Uses AI Services"
@@ -182,9 +182,9 @@ watch(
   () => props.selectedCompany,
   (newVal) => {
     if (newVal) {
-      newCompany.company_name = newVal.label
+      newCompany.name = newVal.label
       if (newVal.aiOption) {
-        newCompany.company_legal_name = newVal.legalName
+        newCompany.legalName = newVal.legalName
         newCompany.country = newVal.country
       }
     }
@@ -192,12 +192,13 @@ watch(
   { immediate: true },
 )
 
-const { addCompanyAsync, isLoading: isAddLoading } = useSaveCompany()
+const { saveCompanyAsync, isLoading: isAddLoading } =
+  useSaveCompany()
 
 async function onSubmit() {
   try {
-    const savedCompany = await addCompanyAsync(newCompany)
-    emit('update:savedCompanyId', savedCompany?.company_id)
+    const savedCompany = await saveCompanyAsync(newCompany)
+    emit('update:savedCompanyId', savedCompany?.id)
     props.onNextStep?.()
   } catch (err) {
     console.error('Failed to add company:', err)
