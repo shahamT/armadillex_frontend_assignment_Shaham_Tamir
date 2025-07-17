@@ -21,7 +21,7 @@
 
       <!-- company name -->
       <div class="col-3 row items-center">
-        <p class="q-pr-xs">Company</p>
+        <p class="q-pr-xs ellipsis">Company</p>
         <SortButton
           :sortKey="'name'"
           :filterBy="filterBy"
@@ -32,7 +32,7 @@
 
       <!-- DPF -->
       <div class="col-2 row items-center">
-        <p class="q-pr-xs">DPF</p>
+        <p class="q-pr-xs ellipsis">DPF</p>
         <SortButton
           :sortKey="'isDpfFound'"
           :filterBy="filterBy"
@@ -43,7 +43,7 @@
 
       <!-- AI -->
       <div class="col-2 row items-center">
-        <p class="q-pr-xs">AI Services</p>
+        <p class="q-pr-xs ellipsis">AI Services</p>
         <SortButton
           :sortKey="'providesAiServices'"
           :filterBy="filterBy"
@@ -54,7 +54,7 @@
 
       <!-- Parent company -->
       <div class="col-2 row items-center">
-        <p class="q-pr-xs">Parent Company</p>
+        <p class="q-pr-xs ellipsis">Parent Company</p>
       </div>
 
       <!-- Active/inactive placeholder -->

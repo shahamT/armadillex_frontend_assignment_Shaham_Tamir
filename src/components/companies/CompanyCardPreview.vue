@@ -79,7 +79,7 @@
               name: 'company-details',
               params: { id: parentCompany.id },
             }"
-            class="text-brand link"
+            class="text-brand link ellipsis"
           >
             {{ parentCompany.name }}
           </router-link>
