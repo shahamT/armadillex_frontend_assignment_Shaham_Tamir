@@ -190,9 +190,8 @@
             <h3 class="text-20 text-font-medium q-mb-md">
               Subsidiary Companies
             </h3>
-
             <q-pagination
-              v-if="!isChildCompaniesLoading && childCompanies.length > 0"
+              v-if="childCompanies.length > 0 || isChildCompaniesLoading"
               :model-value="filterBy.page"
               @update:model-value="(val) => updateFilterBy('page', val)"
               :max="maxPage"
