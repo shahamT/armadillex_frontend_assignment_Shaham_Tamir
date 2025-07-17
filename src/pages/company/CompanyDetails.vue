@@ -37,7 +37,19 @@
       >
 
       <!-- company details -->
-      <h2 class="q-mb-lg text-52">{{ company.name }}</h2>
+      <div class="row">
+        <h2 class="q-mb-lg text-52">{{ company.name }}</h2>
+        <q-badge
+          :class="company.active ? 'positive-badge' : 'grayed-badge'"
+          class="self-center q-ml-auto text-16 q-py-xs q-px-md"
+        >
+          <q-icon
+            :name="company.active ? 'check_circle' : 'cancel'"
+            class="q-mr-sm"
+          />
+          {{ company.active ? 'Active Company' : 'Inactive Company' }}
+        </q-badge>
+      </div>
 
       <div class="column q-gutter-y-lg">
         <q-card
@@ -308,6 +320,7 @@ function updateFilterBy(key, value) {
 
 .grayed-badge {
   background-color: #e4e4e4;
+  color: var(--q-secondary);
 }
 
 .positive-badge {
