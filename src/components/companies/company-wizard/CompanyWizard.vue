@@ -3,36 +3,34 @@
     v-model="modelValue"
     persistent
   >
+    <!-- dialog content -->
     <q-card
       class="q-dialog-plugin q-pa-sm"
       style="min-width: 500px"
     >
+      <!-- close dialog btn -->
       <q-btn
         icon="close"
         flat
         dense
         round
         class="absolute-top-right q-ma-sm z-top"
-        @click="modelValue = false"
+        @click="closeWizard"
       />
 
       <q-card-section>
-        <!-- step 1 -->
+        <!-- step 1 - company name with ai suggestions -->
         <div v-if="step === 1">
-          <div class="text-h3 text-28 q-pb-md">
-            {{ type === 'add' ? 'Add' : 'Update' }} Company
-          </div>
+          <div class="text-h3 text-28 q-pb-md">{{ title }} Company</div>
           <StepCompanyName
             :onNextStep="goNext"
             v-model:selectedCompany="selectedCompany"
           />
         </div>
 
-        <!-- step 2 -->
+        <!-- step 2 - company details form -->
         <div v-else-if="step === 2">
-          <div class="text-h3 text-28 q-pb-md">
-            {{ type === 'add' ? 'Add' : 'Update' }} Company
-          </div>
+          <div class="text-h3 text-28 q-pb-md">{{ title }} Company</div>
           <StepCompanyDetails
             :onNextStep="goNext"
             :onPreviousStep="goBack"
@@ -41,11 +39,11 @@
           />
         </div>
 
-        <!-- step 3 -->
+        <!-- step 3 - turn active or not-->
         <div v-else-if="step === 3">
           <StepCompanyActivate
             v-model:savedCompanyId="savedCompanyId"
-            :closeWizard="() => (modelValue = false)"
+            :closeWizard="closeWizard"
           />
         </div>
       </q-card-section>
@@ -64,7 +62,6 @@ const modelValue = defineModel({ default: false })
 const props = defineProps({
   type: {
     type: String,
-    required: true,
     default: 'add',
   },
   companyId: {
@@ -77,6 +74,11 @@ const step = ref(1)
 const startStep = computed(() => (props.type === 'edit' ? 2 : 1))
 const selectedCompany = ref(null)
 const savedCompanyId = ref(null)
+
+//preperation for adding 'edit' mode
+const title = computed(
+  () => `${props.type === 'add' ? 'Add' : 'Update'} Company`,
+)
 
 // Initialize step on open
 watch(modelValue, (val) => {
@@ -98,6 +100,8 @@ function goNext() {
     step.value = 1
   }
 }
-</script>
 
-<style scoped lang="scss"></style>
+function closeWizard() {
+  modelValue.value = false
+}
+</script>

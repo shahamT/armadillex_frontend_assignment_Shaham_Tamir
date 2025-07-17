@@ -6,8 +6,8 @@
       bordered
     >
       <div class="row items-center full-width">
+       
         <!-- ------flag------- -->
-
         <div class="col-auto q-pl-md q-pr-md">
           <q-img
             class="country-flag"

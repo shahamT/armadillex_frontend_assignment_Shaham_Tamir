@@ -3,12 +3,14 @@
     v-if="isLoading || !editableCompany"
     class="q-pa-md flex items-center justify-center"
   >
+    <!-- loading state for company -->
     <q-spinner
       color="brand"
       size="4em"
     />
   </div>
 
+  <!-- step content -->
   <div
     v-else
     class="column items-center text-center"
@@ -26,6 +28,7 @@
       <span class="text-bold">Active</span>?
     </p>
 
+    <!-- //activate toggel -->
     <div class="row items-center full-width justify-center q-mt-sm">
       <p class="text-18 text-secondary q-mr-sm">Inactive</p>
       <q-toggle
@@ -38,6 +41,7 @@
       <p class="text-18 text-secondary q-ml-sm">Active</p>
     </div>
 
+    <!-- //info msg for keeping the company inactive -->
     <div
       v-if="!editableCompany.active"
       class="info-container text-14 text-secondary row items-center justify-center no-wrap full-width q-py-sm q-px-md q-gutter-x-md"
@@ -49,12 +53,12 @@
         size="md"
       />
       <span class="text-left">
-    
-        Inactive companies won’t appear in the list unless you enable <br> “Show inactive
-        companies” in the filters panel.
+        Inactive companies won’t appear in the list unless you enable <br />
+        “Show inactive companies” in the filters panel.
       </span>
     </div>
 
+    <!-- // save / close btns -->
     <div class="row full-width q-mt-md">
       <q-btn
         v-if="!editableCompany.active"
@@ -117,7 +121,7 @@ async function saveCompany() {
 </script>
 
 <style scoped lang="scss">
-.info-container{
+.info-container {
   background-color: #f5f5f5;
   border-radius: var(--small-radius);
 }

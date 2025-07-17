@@ -2,11 +2,11 @@
   <div class="companies-filter-panel q-mb-lg">
     <!-- Main row -->
     <div class="row items-center q-col-gutter-md">
-      <!-- Search -->
+      <!-- Text Search -->
       <div class="col-3">
         <q-input
           :model-value="filterBy.search"
-          @update:model-value="(val) => onUpdate('search', val)"
+          @update:model-value="(val) => updateFilterBy('search', val)"
           type="search"
           class="text-18"
           outlined
@@ -39,7 +39,7 @@
       <div class="col row justify-end items-center">
         <q-pagination
           :model-value="filterBy.page"
-          @update:model-value="(val) => onUpdate('page', val)"
+          @update:model-value="(val) => updateFilterBy('page', val)"
           :max="maxPage"
           direction-links
           gutter="8px"
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <!-- Filters panel -->
+    <!-- Collapsible filters panel -->
     <q-slide-transition>
       <div
         v-show="filterOpen"
@@ -59,23 +59,23 @@
           bordered
           class="q-pa-md row items-center"
         >
-          <!-- Toggles -->
+          <!-- Toggles - active / dpf / ai services -->
           <div class="q-gutter-sm col-auto">
             <q-toggle
               :model-value="filterBy.active"
-              @update:model-value="(val) => onUpdate('active', val)"
+              @update:model-value="(val) => updateFilterBy('active', val)"
               label="Show inactive companies"
               color="brand"
             />
             <q-toggle
               :model-value="filterBy.ai"
-              @update:model-value="(val) => onUpdate('ai', val)"
+              @update:model-value="(val) => updateFilterBy('ai', val)"
               label="Provides AI Services"
               color="brand"
             />
             <q-toggle
               :model-value="filterBy.dpf"
-              @update:model-value="(val) => onUpdate('dpf', val)"
+              @update:model-value="(val) => updateFilterBy('dpf', val)"
               label="Listed in DPF"
               color="brand"
             />
@@ -85,9 +85,7 @@
           <div class="select-input col-2 q-ml-lg">
             <q-select
               :model-value="selectedCountryObj"
-              @update:model-value="
-                (val) => onUpdate('country', val?.value || '')
-              "
+              @update:model-value="onCountrySelect"
               outlined
               dense
               clearable
@@ -95,12 +93,12 @@
               hide-selected
               fill-input
               placeholder="Filter by country"
-              :options="filteredOptions"
+              :options="filteredCountries"
               color="brand"
               @filter="filterFn"
               @filter-abort="abortFilterFn"
             >
-              <!-- Option -->
+              <!-- Country Option template -->
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps">
                   <q-item-section avatar>
@@ -130,7 +128,7 @@
                 />
               </template>
 
-              <!-- No results -->
+              <!-- Country No results template -->
               <template v-slot:no-option>
                 <q-item>
                   <q-item-section class="text-grey"
@@ -158,6 +156,7 @@
             :loading="isCompaniesLoading"
             @filter="onSearch"
           >
+            <!-- Parent Company option template -->
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps">
                 <q-item-section>
@@ -166,6 +165,7 @@
               </q-item>
             </template>
 
+            <!-- Parent Company No results template -->
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -188,14 +188,10 @@
                 icon="filter_list_off"
                 label="Clear Filters"
                 class="light-radius"
-                @click="
-                  () => {
-                    clearFilters()
-                    filterOpen = false
-                  }
-                "
+                @click="handleClearFilters"
               />
             </div>
+
           </div>
         </q-card>
       </div>
@@ -209,12 +205,12 @@ import { getCountriesOptions } from 'src/services/util.service'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 
-const { filterBy, onUpdate, maxPage } = defineProps({
+const { filterBy, updateFilterBy, maxPage } = defineProps({
   filterBy: {
     type: Object,
     required: true,
   },
-  onUpdate: {
+  updateFilterBy: {
     type: Function,
     required: true,
   },
@@ -223,7 +219,6 @@ const { filterBy, onUpdate, maxPage } = defineProps({
     default: 5,
   },
 })
-
 
 //filter section expanded/collapsed
 const filterOpen = ref(false)
@@ -241,21 +236,26 @@ const activeFilters = computed(() => {
 
 //clear filters
 function clearFilters() {
-  onUpdate('country', '')
-  onUpdate('active', false)
-  onUpdate('ai', false)
-  onUpdate('dpf', false)
-  onUpdate('parentCompany', '')
+  updateFilterBy('country', '')
+  updateFilterBy('active', false)
+  updateFilterBy('ai', false)
+  updateFilterBy('dpf', false)
+  updateFilterBy('parentCompany', '')
   selectedParentCompany.value = null
 }
 
+function handleClearFilters() {
+  clearFilters()
+  filterOpen.value = false
+}
+
 //---- Country filter -----
-const allOptions = getCountriesOptions()
-const filteredOptions = ref([...allOptions])
+const allCountries = getCountriesOptions()
+const filteredCountries = ref([...allCountries])
 
 function filterFn(val, update) {
   const search = val.toLowerCase()
-  filteredOptions.value = allOptions.filter(
+  filteredCountries.value = allCountries.filter(
     (opt) =>
       opt.label.toLowerCase().includes(search) ||
       opt.description.toLowerCase().includes(search),
@@ -264,12 +264,16 @@ function filterFn(val, update) {
 }
 
 function abortFilterFn() {
-  filteredOptions.value = [...allOptions]
+  filteredCountries.value = [...allCountries]
 }
 
 const selectedCountryObj = computed(
-  () => allOptions.find((opt) => opt.value === filterBy.country) || null,
+  () => allCountries.find((opt) => opt.value === filterBy.country) || null,
 )
+
+function onCountrySelect(val) {
+  updateFilterBy('country', val?.value || '')
+}
 
 //Parent company filter
 const finalizedCompanies = ref([])
@@ -277,16 +281,16 @@ const selectedParentCompany = ref(null)
 
 const companyFilterBy = reactive({
   ...companiesService.getDefaultFilterBy(),
-  search: '',        
+  search: '',
   sortBy: 'name',
   sortDir: 'asc',
   page: 1,
-  pageSize: null  
+  pageSize: null,
 })
 
 const { companies, isLoading: isCompaniesLoading } = useCompanies(
   companyFilterBy,
-  'parentFilterSelect'
+  'parentFilterSelect',
 )
 
 watch(companies, (newCompanies) => {
@@ -296,15 +300,14 @@ watch(companies, (newCompanies) => {
 function onSearch(val, update) {
   const search = val.toLowerCase()
   finalizedCompanies.value = companies.value.filter((c) =>
-    c.name?.toLowerCase().includes(search)
+    c.name?.toLowerCase().includes(search),
   )
   update()
 }
 
 watch(selectedParentCompany, (val) => {
-  onUpdate('parentCompany', val?.id || '')
+  updateFilterBy('parentCompany', val?.id || '')
 })
-
 </script>
 
 <style scoped lang="scss">

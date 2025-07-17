@@ -1,11 +1,10 @@
 <template>
   <q-card class="list-container q-pa-lg">
-    
-    <!-- header -->
+    <!-- card header -->
     <q-card-section class="row items-center q-pa-none q-mb-md">
-
       <h1 class="text-40">Companies</h1>
 
+      <!-- add company btn -->
       <div class="col-auto text-18 q-ml-auto">
         <q-btn
           unelevated
@@ -15,22 +14,23 @@
           icon="add"
           label="Add company"
           class="text-18 light-radius"
-         @click="openAddCompanyWizard"
+          @click="openAddCompanyWizard"
         />
       </div>
     </q-card-section>
 
-    <q-separator class="q-mb-md"/>
+    <!-- seperator -->
+    <q-separator class="q-mb-md" />
 
     <!-- filter -->
     <CompaniesFilterPanel
       :filterBy="filterBy"
-      :onUpdate="updateFilterBy"
+      :updateFilterBy="updateFilterBy"
       :maxPage="maxPage"
     />
 
-    <!-- list -->
-    <div class="companies-list-wrapper column">
+    <!-- companies list -->
+    <div class="companies-list-wrapper">
       <CompaniesList
         :companies="companies"
         :filterBy="filterBy"
@@ -39,19 +39,20 @@
       />
     </div>
 
+    <!-- bottom pagination -->
     <div class="row justify-end q-mt-auto q-pa-md">
-    <q-pagination
-      :model-value="filterBy.page"
-      @update:model-value="(val) => updateFilterBy('page', val)"
-      :max="maxPage"
-      direction-links
-      gutter="8px"
-      color="brand"
-    />
-  </div>
-
+      <q-pagination
+        :model-value="filterBy.page"
+        @update:model-value="(val) => updateFilterBy('page', val)"
+        :max="maxPage"
+        direction-links
+        gutter="8px"
+        color="brand"
+      />
+    </div>
   </q-card>
 
+  <!-- dialog for add-company flow -->
   <CompanyWizard
     v-model="isCompanyWizardOpen"
     :type="companyWizardType"
@@ -59,7 +60,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 
@@ -77,14 +78,12 @@ function openAddCompanyWizard() {
 }
 
 //set filter by
-const filterBy = reactive(companiesService.getDefaultFilterBy())
-filterBy.pageSize = 15
+const filterBy = ref(companiesService.getDefaultFilterBy())
+filterBy.value.pageSize = 15
+
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
 
 function updateFilterBy(key, value) {
-  filterBy[key] = value
+  filterBy.value[key] = value
 }
 </script>
-
-<style scoped lang="scss">
-</style>

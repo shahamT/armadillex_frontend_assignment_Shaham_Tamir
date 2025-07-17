@@ -1,13 +1,13 @@
 <template>
-  <!-- columns-header -->
+  <!-- list-header row -->
   <q-card
     @click="viewCompany(company.id)"
     class="companies-list-column-headers flex items-center text-secondary"
     style="height: 48px"
     flat
-    
   >
-    <div class=" row items-center full-width">
+    <!-- country place holder (flag) -->
+    <div class="row items-center full-width">
       <div class="col-auto q-pl-sm q-pr-lg">
         <div class="flag-placeholder">
           <SortButton
@@ -19,6 +19,7 @@
         </div>
       </div>
 
+      <!-- company name -->
       <div class="col-3 row items-center">
         <p class="q-pr-xs">Company</p>
         <SortButton
@@ -29,6 +30,7 @@
         />
       </div>
 
+      <!-- DPF -->
       <div class="col-2 row items-center">
         <p class="q-pr-xs">DPF</p>
         <SortButton
@@ -39,6 +41,7 @@
         />
       </div>
 
+      <!-- AI -->
       <div class="col-2 row items-center">
         <p class="q-pr-xs">AI Services</p>
         <SortButton
@@ -49,10 +52,12 @@
         />
       </div>
 
+      <!-- Parent company -->
       <div class="col-2 row items-center">
         <p class="q-pr-xs">Parent Company</p>
       </div>
 
+      <!-- Active/inactive placeholder -->
       <div class="col-1 row items-center">
         <p class="q-pr-xs"></p>
       </div>
@@ -78,7 +83,7 @@
     v-if="!isLoading"
     class="companies-list column q-gutter-y-sm q-pt-sm scroll"
   >
-  <!-- empty state -->
+    <!-- empty state -->
     <div
       v-if="companies.length === 0"
       class="column items-center justify-center text-center"
@@ -154,8 +159,7 @@ function clearSort() {
   width: 24px;
 }
 
-.companies-list-column-headers{
-    background-color: rgba(0, 38, 68, 0.03);
-
+.companies-list-column-headers {
+  background-color: rgba(0, 38, 68, 0.03);
 }
 </style>

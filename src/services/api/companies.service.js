@@ -24,18 +24,20 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
 
   const refactored = _refactorCompanies(companies)
 
-  const filtered = refactored.filter((c) => {
+  const filtered = refactored.filter((company) => {
+    //text search by either name or legal name
     const matchesSearch =
       !filterBy.search ||
-      c.name?.toLowerCase().includes(filterBy.search.toLowerCase()) ||
-      c.legalName?.toLowerCase().includes(filterBy.search.toLowerCase())
+      company.name?.toLowerCase().includes(filterBy.search.toLowerCase()) ||
+      company.legalName?.toLowerCase().includes(filterBy.search.toLowerCase())
 
-    const matchesCountry = !filterBy.country || c.country === filterBy.country
-    const matchesActive = filterBy.active || c.active
-    const matchesAI = !filterBy.ai || c.providesAiServices
-    const matchesDPF = !filterBy.dpf || c.isDpfFound
+    const matchesCountry =
+      !filterBy.country || company.country === filterBy.country
+    const matchesActive = filterBy.active || company.active
+    const matchesAI = !filterBy.ai || company.providesAiServices
+    const matchesDPF = !filterBy.dpf || company.isDpfFound
     const matchesParent =
-      !filterBy.parentCompany || c.parentId === filterBy.parentCompany
+      !filterBy.parentCompany || company.parentId === filterBy.parentCompany
 
     return (
       matchesSearch &&
@@ -64,15 +66,17 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     return 0
   })
 
+  //can get null (to fetch all availible companies) or num, null is default
   const pageSize = isNaN(Number(filterBy.pageSize))
-  ? null
-  : Number(filterBy.pageSize)
+    ? null
+    : Number(filterBy.pageSize)
 
-const paginated =
-  pageSize && pageSize > 0
-    ? sorted.slice((filterBy.page - 1) * pageSize, filterBy.page * pageSize)
-    : sorted
-    
+    //return paginated items or all items (in case of null)
+  const paginated =
+    pageSize && pageSize > 0
+      ? sorted.slice((filterBy.page - 1) * pageSize, filterBy.page * pageSize)
+      : sorted
+
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -87,9 +91,7 @@ const paginated =
 
 function saveCompany(company) {
   const companies = loadCompaniesFromStorage() || []
-
   const rawCompany = _refactorToRawCompany(company)
-
   const isNew = !rawCompany.company_id
 
   if (isNew) {
@@ -121,7 +123,7 @@ function saveCompany(company) {
 
 function getCompanyById(companyId) {
   const companies = loadCompaniesFromStorage() || []
-  const company = companies.find((c) => c.company_id === companyId)
+  const company = companies.find((currCompany) => currCompany.company_id === companyId)
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -505,24 +507,4 @@ const DemoAISuggestions = [
     flagURL: getFlagUrl('CAN'),
     aiOption: true,
   },
-  // {
-  //   label: 'AquaSense',
-  //   value: 'AquaSense',
-  //   legalName: 'AquaSense Technologies Ltd.',
-  //   industry: 'Water Technology',
-  //   description: 'Develops smart irrigation systems and water-saving solutions for agriculture.',
-  //   country: 'AUS',
-  //   flagURL: getFlagUrl('AUS'),
-  //   aiOption: true,
-  // },
-  // {
-  //   label: 'MedTrack',
-  //   value: 'MedTrack',
-  //   legalName: 'MedTrack Health Pte. Ltd.',
-  //   industry: 'Healthcare',
-  //   description: 'Creates wearable devices that monitor patient vitals in real time.',
-  //   country: 'SGP',
-  //   flagURL: getFlagUrl('SGP'),
-  //   aiOption: true,
-  // },
 ]

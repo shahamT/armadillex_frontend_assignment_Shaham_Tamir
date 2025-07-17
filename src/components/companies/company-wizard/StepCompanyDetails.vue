@@ -3,6 +3,7 @@
     ref="companyForm"
     @submit.prevent="onSubmit"
   >
+    <!-- company name input -->
     <p class="text-16 text-font-thin q-pb-xs q-ml-sm">Company Name *</p>
     <q-input
       v-model="newCompany.name"
@@ -17,6 +18,7 @@
     >
     </q-input>
 
+    <!-- legal name input -->
     <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">Legal Name *</p>
     <q-input
       v-model="newCompany.legalName"
@@ -49,7 +51,7 @@
       @filter-abort="abortFilterFn"
       :rules="[(val) => !!val || 'Country is required']"
     >
-      <!-- Option -->
+      <!-- country Option template -->
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps">
           <q-item-section avatar>
@@ -69,17 +71,16 @@
         </q-item>
       </template>
 
+      <!-- country flag prefix on selection -->
       <template v-slot:prepend>
         <q-img
-          :src="
-            selectedCountryOption?.flagURL || '/imgs/placeholder_flag.jpg'
-          "
+          :src="selectedCountryOption?.flagURL || '/imgs/placeholder_flag.jpg'"
           fit="contain"
           class="country-flag q-ml-xs q-mr-xs"
         />
       </template>
 
-      <!-- No results -->
+      <!-- country No results template -->
       <template v-slot:no-option>
         <q-item>
           <q-item-section class="text-grey">No countries found</q-item-section>
@@ -107,7 +108,7 @@
       :loading="isCompaniesLoading"
       @filter="onSearch"
     >
-      <!-- Option slot -->
+      <!-- parent company Option template -->
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps">
           <q-item-section>
@@ -116,11 +117,19 @@
         </q-item>
       </template>
 
-      <!-- No results -->
+      <!-- parent company No results template-->
       <template v-slot:no-option>
         <q-item>
-          <q-item-section v-if="isCompaniesLoading" class="text-grey">Searching...</q-item-section>
-          <q-item-section v-else class="text-grey">No companies found</q-item-section>
+          <q-item-section
+            v-if="isCompaniesLoading"
+            class="text-grey"
+            >Searching...</q-item-section
+          >
+          <q-item-section
+            v-else
+            class="text-grey"
+            >No companies found</q-item-section
+          >
         </q-item>
       </template>
     </q-select>
@@ -147,6 +156,7 @@
       />
     </div>
 
+    <!-- submit btn -->
     <q-btn
       unelevated
       size="md"
@@ -193,8 +203,7 @@ watch(
   { immediate: true },
 )
 
-const { saveCompanyAsync, isLoading: isAddLoading } =
-  useSaveCompany()
+const { saveCompanyAsync, isLoading: isAddLoading } = useSaveCompany()
 
 async function onSubmit() {
   try {
@@ -206,7 +215,6 @@ async function onSubmit() {
   }
 }
 
-
 //---- select parent company -----
 const finalizedCompanies = ref([])
 const selectedParentCompany = ref(null)
@@ -217,11 +225,13 @@ const companyFilterBy = reactive({
   sortBy: 'name',
   sortDir: 'asc',
   page: 1,
-  pageSize: null
+  pageSize: null,
 })
 
-const { companies, isLoading: isCompaniesLoading } =
-  useCompanies(companyFilterBy, 'addCompanySelect')
+const { companies, isLoading: isCompaniesLoading } = useCompanies(
+  companyFilterBy,
+  'addCompanySelect',
+)
 
 watch(companies, (newCompanies) => {
   finalizedCompanies.value = [...newCompanies]
@@ -235,7 +245,6 @@ function onSearch(val, update) {
 function onUpdate(key, val) {
   newCompany[key] = val
 }
-
 
 //---- select country -----
 const allOptions = getCountriesOptions()

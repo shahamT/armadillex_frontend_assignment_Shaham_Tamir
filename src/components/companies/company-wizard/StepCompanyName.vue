@@ -2,6 +2,7 @@
   <div>
     <p class="text-16 text-font-thin q-pb-sm">Enter company name</p>
 
+    <!-- company name select -->
     <div class="row no-wrap items-center">
       <q-select
         class="full-width text-18"
@@ -22,6 +23,7 @@
         @input-value="onInputChange"
         @update:model-value="onSelect"
       >
+        <!-- popup header with ai statement -->
         <template v-slot:before-options>
           <div class="q-pa-sm text-primary text-subtitle2 bg-info">
             <q-img
@@ -34,7 +36,7 @@
           </div>
         </template>
 
-        <!-- Custom Option Template -->
+        <!-- AI Company suggestion Template -->
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps">
             <q-item-section class="q-pa-xs full-width column">
@@ -58,6 +60,7 @@
         </template>
       </q-select>
 
+      <!-- continue btn -->
       <div class="col-auto text-18 q-ml-sm">
         <q-btn
           unelevated
@@ -73,6 +76,8 @@
         />
       </div>
     </div>
+    
+    <!-- ai msg in case ai suggestion was selected -->
     <div
       v-if="selectedCompany?.aiOption"
       class="row items-center q-pt-md"
@@ -88,10 +93,13 @@
       </p>
     </div>
 
+    <!-- blank space placeholder -->
     <div
       v-else
       class="q-pb-sm"
     ></div>
+
+
   </div>
 </template>
 
