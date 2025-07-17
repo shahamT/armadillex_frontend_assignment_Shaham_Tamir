@@ -67,19 +67,20 @@
           </q-badge>
         </div>
 
-        
         <!-- ------Parent Company------- -->
-        <div class="col-2 q-pr-sm">
-          <!-- <div v-if="isParentCompanyLoading && company.parentId">loading...</div> -->
-          
+        <div class="col-2 q-pr-sm row">
+          <q-skeleton
+            class="col-6"
+            v-if="isParentCompanyLoading"
+          />
           <router-link
-          v-if="parentCompany"
-          :to="{
-            name: 'company-details',
-            params: { id: parentCompany.id },
-          }"
+            v-else-if="parentCompany"
+            :to="{
+              name: 'company-details',
+              params: { id: parentCompany.id },
+            }"
             class="text-brand link"
-            >
+          >
             {{ parentCompany.name }}
           </router-link>
         </div>
@@ -93,14 +94,13 @@
             Inactive Company
           </q-badge>
         </div>
-
       </div>
     </q-card>
   </router-link>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useGetCompany } from 'src/composables/useGetCompany'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
 
@@ -112,49 +112,23 @@ const props = defineProps({
 })
 
 //parent company fetching
-const parentCompany = ref(null)
-const isParentCompanyLoading = ref(false)
+const parentId = computed(() => {
+  return props.company ? (props.company.parentId ?? null) : null
+})
 
-async function fetchParentCompany(parentId) {
-  if (!parentId) return
-
-  const parentCompanyQuery = useGetCompany(parentId)
-
-  isParentCompanyLoading.value = parentCompanyQuery.isLoading.value
-
-  watch(parentCompanyQuery.isLoading, (val) => {
-    isParentCompanyLoading.value = val
-  })
-
-  watch(parentCompanyQuery.company, (val) => {
-    if (val) {
-      parentCompany.value = val
-    }
-  })
-}
-
-watch(
-  () => props.company,
-  (newCompany) => {
-    if (newCompany?.parentId) {
-      fetchParentCompany(newCompany.parentId)
-    } else {
-      parentCompany.value = null
-      isParentCompanyLoading.value = false
-    }
-  },
-  { immediate: true },
-)
-
+const { company: parentCompany, isLoading: isParentCompanyLoading } =
+  useGetCompany(parentId.value)
 </script>
 
 <style lang="scss">
 @import '/src/css/setup/variables.scss';
 
 .company-card-preview {
+  background-color: rgba(0, 38, 68, 0.01);
+
   box-shadow: var(--list-item-shadow);
   &:hover {
-    background-color: rgba(0, 38, 68, 0.01);
+    background-color: rgba(0, 38, 68, 0.03);
     box-shadow: var(--list-item-shadow-hover);
     cursor: pointer;
   }
@@ -179,10 +153,9 @@ watch(
   }
 
   .link {
-  &:hover {
-    text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
   }
-}
-
 }
 </style>

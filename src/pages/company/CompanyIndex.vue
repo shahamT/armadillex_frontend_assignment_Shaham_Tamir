@@ -1,7 +1,8 @@
 <template>
-  <q-card class="list-container">
+  <q-card class="list-container q-pa-lg">
+    
     <!-- header -->
-    <q-card-section class="row items-center">
+    <q-card-section class="row items-center q-pa-none q-mb-md">
 
       <h1 class="text-40">Companies</h1>
 
@@ -19,7 +20,7 @@
       </div>
     </q-card-section>
 
-    <q-separator />
+    <q-separator class="q-mb-md"/>
 
     <!-- filter -->
     <CompaniesFilterPanel
@@ -29,7 +30,7 @@
     />
 
     <!-- list -->
-    <div class="companies-list-wrapper column q-pa-md">
+    <div class="companies-list-wrapper column">
       <CompaniesList
         :companies="companies"
         :filterBy="filterBy"

@@ -80,14 +80,13 @@
             <div class="q-mr-xl">
               <p class="text-16 text-secondary q-mb-xs">Parent Company</p>
 
-              <q-spinner
+              <q-skeleton
+                width="100px"
                 v-if="isParentCompanyLoading"
-                color="brand"
-                size="1em"
               />
 
               <router-link
-                v-else-if="company.parentId && parentCompany"
+                v-else-if="parentCompany"
                 :to="{
                   name: 'company-details',
                   params: { id: parentCompany.id },
@@ -250,11 +249,13 @@ import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const companyId = route.params.id
+const companyId = computed(() => route.params.id)
 const { company, isLoading } = useGetCompany(companyId)
 
-//parent company
-const parentId = computed(() => company.value?.parentId)
+//parent company fetching
+const parentId = computed(() => {
+  return company.value?.parentId ?? null
+})
 
 const { company: parentCompany, isLoading: isParentCompanyLoading } =
   useGetCompany(parentId)

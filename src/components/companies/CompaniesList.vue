@@ -5,10 +5,10 @@
     class="companies-list-column-headers flex items-center text-secondary"
     style="height: 48px"
     flat
-    bordered
+    
   >
-    <div class="row items-center full-width">
-      <div class="col-auto q-pl-md q-pr-md">
+    <div class=" row items-center full-width">
+      <div class="col-auto q-pl-sm q-pr-lg">
         <div class="flag-placeholder">
           <SortButton
             :sortKey="'country'"
@@ -152,5 +152,10 @@ function clearSort() {
 <style scoped lang="scss">
 .flag-placeholder {
   width: 24px;
+}
+
+.companies-list-column-headers{
+    background-color: rgba(0, 38, 68, 0.03);
+
 }
 </style>

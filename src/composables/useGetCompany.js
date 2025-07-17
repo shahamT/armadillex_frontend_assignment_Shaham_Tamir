@@ -1,12 +1,21 @@
+import { computed, isRef } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 import { companiesService } from 'src/services/api/companies.service'
 import { QUERY_KEYS } from './const'
 
-export function useGetCompany(companyId) {
+export function useGetCompany(companyIdInput) {
+  const companyId = isRef(companyIdInput)
+    ? companyIdInput
+    : computed(() => companyIdInput)
+
   const query = useQuery({
-    queryKey: [QUERY_KEYS.COMPANY, companyId],
-    queryFn: () => companiesService.getCompanyById(companyId),
-    enabled: !!companyId,
+    queryKey: computed(() => [QUERY_KEYS.COMPANY, companyId.value]),
+    queryFn: () => companiesService.getCompanyById(companyId.value),
+    enabled: computed(() => !!companyId.value),
+    retry: false,
+    onError: (err) => {
+      console.error('[VUE QUERY ERROR]', err)
+    },
   })
 
   return {

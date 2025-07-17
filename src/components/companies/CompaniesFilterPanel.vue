@@ -1,5 +1,5 @@
 <template>
-  <div class="companies-filter-panel q-pa-md">
+  <div class="companies-filter-panel q-mb-lg">
     <!-- Main row -->
     <div class="row items-center q-col-gutter-md">
       <!-- Search -->

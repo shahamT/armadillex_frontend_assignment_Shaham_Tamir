@@ -121,12 +121,12 @@ function saveCompany(company) {
 
 function getCompanyById(companyId) {
   const companies = loadCompaniesFromStorage() || []
-  const company = companies.find((c) => c.company_id === companyId) || null
-  const formatted = _refactorCompany(company)
+  const company = companies.find((c) => c.company_id === companyId)
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(formatted)
+      if (!company) return reject(new Error('Company not found'))
+      resolve(_refactorCompany(company))
     }, 1000)
   })
 }
