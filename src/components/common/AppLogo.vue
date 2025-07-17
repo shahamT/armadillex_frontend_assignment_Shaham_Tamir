@@ -1,6 +1,12 @@
 <template>
-  <div class="logo-container relative" @click="goToHome">
-    <q-icon name="img:/src/assets/logo.svg" class="cursor-pointer" />
+  <div
+    class="logo-container relative"
+    @click="goToHome"
+  >
+    <q-icon
+      name="img:/src/assets/logo.svg"
+      class="cursor-pointer"
+    />
     <span class="text-12 text-font-medium text-secondary">Companies DB </span>
   </div>
 </template>

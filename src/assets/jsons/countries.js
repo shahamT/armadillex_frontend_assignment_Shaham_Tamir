@@ -1310,7 +1310,10 @@ const countryRegionsMap = {
     { regionCode: 'GU', regionName: 'Guam	Outlying area' },
     { regionCode: 'MP', regionName: 'Northern Mariana Islands	Outlying area' },
     { regionCode: 'PR', regionName: 'Puerto Rico	Outlying area' },
-    { regionCode: 'UM', regionName: 'United States Minor Outlying Islands	Outlying area' },
+    {
+      regionCode: 'UM',
+      regionName: 'United States Minor Outlying Islands	Outlying area',
+    },
     { regionCode: 'VI', regionName: 'Virgin Islands, U.S.Outlying area' },
   ],
   GBR: [

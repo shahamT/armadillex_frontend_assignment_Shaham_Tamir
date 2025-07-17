@@ -44,7 +44,10 @@ export const notifyService = {
       icon: 'star',
       position: 'bottom-right',
       timeout: 5000,
-      actions: [{ icon: 'close', color: 'white', handler: () => {} }, ...actions],
+      actions: [
+        { icon: 'close', color: 'white', handler: () => {} },
+        ...actions,
+      ],
       multiLine: true,
       progress: true,
     })

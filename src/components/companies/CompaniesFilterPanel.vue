@@ -191,7 +191,6 @@
                 @click="handleClearFilters"
               />
             </div>
-
           </div>
         </q-card>
       </div>

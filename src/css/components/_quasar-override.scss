@@ -23,7 +23,8 @@
   // outline: 1px solid $clr-brand;
 }
 
-.q-field--outlined.q-field--highlighted.q-field--error .q-field__control::after {
+.q-field--outlined.q-field--highlighted.q-field--error
+  .q-field__control::after {
   outline: 1px solid $clr-warning;
 }
 

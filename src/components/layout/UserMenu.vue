@@ -1,8 +1,17 @@
 <template>
   <div class="user-menu">
-    <q-btn round outline :color="menuOpen ? 'primary' : 'secondary'" class="user-avatar-btn">
+    <q-btn
+      round
+      outline
+      :color="menuOpen ? 'primary' : 'secondary'"
+      class="user-avatar-btn"
+    >
       <q-avatar size="32px">
-        <q-icon name="person" size="24px" :color="menuOpen ? 'primary' : 'secondary'" />
+        <q-icon
+          name="person"
+          size="24px"
+          :color="menuOpen ? 'primary' : 'secondary'"
+        />
       </q-avatar>
 
       <q-menu
@@ -12,33 +21,58 @@
         :offset="[0, 5]"
         class="user-menu-dropdown"
       >
-        <q-list style="min-width: 200px" class="light-bordered light-radius">
-          <q-item-label header class="text-primary text-font-light">
+        <q-list
+          style="min-width: 200px"
+          class="light-bordered light-radius"
+        >
+          <q-item-label
+            header
+            class="text-primary text-font-light"
+          >
             Hello,
             <span class="text-font-medium">User</span>
           </q-item-label>
 
           <q-separator />
 
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+          >
             <q-item-section avatar>
-              <q-icon name="account_circle" color="secondary" />
+              <q-icon
+                name="account_circle"
+                color="secondary"
+              />
             </q-item-section>
             <q-item-section>Profile</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+          >
             <q-item-section avatar>
-              <q-icon name="settings" color="secondary" />
+              <q-icon
+                name="settings"
+                color="secondary"
+              />
             </q-item-section>
             <q-item-section>Settings</q-item-section>
           </q-item>
 
           <q-separator />
 
-          <q-item clickable v-ripple @click="onLogout">
+          <q-item
+            clickable
+            v-ripple
+            @click="onLogout"
+          >
             <q-item-section avatar>
-              <q-icon name="logout" color="negative" />
+              <q-icon
+                name="logout"
+                color="negative"
+              />
             </q-item-section>
             <q-item-section class="text-negative">Logout</q-item-section>
           </q-item>

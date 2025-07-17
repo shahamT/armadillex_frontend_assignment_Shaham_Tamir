@@ -89,5 +89,3 @@ export function getCountryFullName(countryCode) {
   if (!countryCode || !countriesCodeMap[countryCode]) return ''
   return countriesCodeMap[countryCode].countryName
 }
-
-

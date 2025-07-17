@@ -14,7 +14,9 @@ export function useAiCompaniesSuggestions() {
     refetchOnReconnect: true,
   })
 
-  const companies = computed(() => Array.isArray(query.data?.value) ? query.data.value : [])
+  const companies = computed(() =>
+    Array.isArray(query.data?.value) ? query.data.value : [],
+  )
 
   return {
     companies,

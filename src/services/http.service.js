@@ -15,7 +15,11 @@ const httpClient = axios.create({
 // Request interceptor
 httpClient.interceptors.request.use(
   async (config) => {
-    log.info('Making request', { data: config.data, url: config.url, method: config.method })
+    log.info('Making request', {
+      data: config.data,
+      url: config.url,
+      method: config.method,
+    })
     return config
   },
   (error) => {

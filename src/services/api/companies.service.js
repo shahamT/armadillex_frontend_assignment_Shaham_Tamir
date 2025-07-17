@@ -71,7 +71,7 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     ? null
     : Number(filterBy.pageSize)
 
-    //return paginated items or all items (in case of null)
+  //return paginated items or all items (in case of null)
   const paginated =
     pageSize && pageSize > 0
       ? sorted.slice((filterBy.page - 1) * pageSize, filterBy.page * pageSize)
@@ -123,7 +123,9 @@ function saveCompany(company) {
 
 function getCompanyById(companyId) {
   const companies = loadCompaniesFromStorage() || []
-  const company = companies.find((currCompany) => currCompany.company_id === companyId)
+  const company = companies.find(
+    (currCompany) => currCompany.company_id === companyId,
+  )
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {

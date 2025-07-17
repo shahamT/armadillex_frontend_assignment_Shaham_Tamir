@@ -16,7 +16,7 @@ import AppLogo from '../common/AppLogo.vue'
 import UserMenu from '../layout/UserMenu.vue'
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 @import '/src/css/setup/variables.scss';
 .app-header {
   height: $header-height;

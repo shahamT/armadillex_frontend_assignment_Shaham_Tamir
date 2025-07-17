@@ -273,7 +273,7 @@ watch(
       filterBy.parentCompany = newId
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 function updateFilterBy(key, value) {

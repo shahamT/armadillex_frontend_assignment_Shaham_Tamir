@@ -10,5 +10,3 @@
 @function lh($pixels, $context: 16px) {
   @return calc($pixels/$context);
 }
-
-

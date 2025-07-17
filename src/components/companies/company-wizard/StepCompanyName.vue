@@ -76,7 +76,7 @@
         />
       </div>
     </div>
-    
+
     <!-- ai msg in case ai suggestion was selected -->
     <div
       v-if="selectedCompany?.aiOption"
@@ -98,8 +98,6 @@
       v-else
       class="q-pb-sm"
     ></div>
-
-
   </div>
 </template>
 

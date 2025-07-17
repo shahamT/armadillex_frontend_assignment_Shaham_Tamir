@@ -20,7 +20,8 @@ const getCallerInfo = () => {
 
   // Extract file path and line number
   const match =
-    caller.match(/at\s+(.+?)\s+\((.+?):(\d+):(\d+)\)/) || caller.match(/at\s+(.+?):(\d+):(\d+)/)
+    caller.match(/at\s+(.+?)\s+\((.+?):(\d+):(\d+)\)/) ||
+    caller.match(/at\s+(.+?):(\d+):(\d+)/)
 
   if (!match) return { scope: null, file: null, line: null }
 

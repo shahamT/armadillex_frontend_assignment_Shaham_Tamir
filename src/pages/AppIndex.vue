@@ -3,13 +3,10 @@
     <app-header />
 
     <q-page-container class="page-container">
-      
       <q-page class="q-pa-md">
         <router-view />
       </q-page>
-
     </q-page-container>
-
   </q-layout>
 </template>
 
@@ -18,7 +15,6 @@ import AppHeader from 'src/components/layout/AppHeader.vue'
 </script>
 
 <style lang="scss">
-
 @import 'src/css/setup/variables.scss';
 
 .page-container {
@@ -31,5 +27,4 @@ import AppHeader from 'src/components/layout/AppHeader.vue'
     max-width: $max-width-screen;
   }
 }
-
 </style>
