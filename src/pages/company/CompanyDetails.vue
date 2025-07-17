@@ -203,20 +203,8 @@
             />
           </div>
 
-          <div
-            v-if="isChildCompaniesLoading"
-            class="q-pa-lg flex full-width items-center justify-center"
-          >
-            <q-spinner
-              color="brand"
-              size="4em"
-            />
-          </div>
-
-          <!-- empty state for child companies -->
-          <div
-            v-else-if="childCompanies.length === 0"
-            class=""
+          <template
+            v-if="childCompanies.length === 0 && !isChildCompaniesLoading"
           >
             <p class="text-18 text-italic text-secondary q-mb-md">
               This company has no registered subsidiary companies
@@ -234,9 +222,7 @@
                 No companies to show
               </p>
             </div>
-          </div>
-
-          <!-- child companies list -->
+          </template>
           <CompaniesList
             v-else
             :companies="childCompanies"
@@ -288,7 +274,7 @@ watch(
       filterBy.parentCompany = newId
     }
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 function updateFilterBy(key, value) {
