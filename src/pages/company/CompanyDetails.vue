@@ -175,7 +175,22 @@
           flat
           class="q-pa-lg"
         >
-          <h3 class="text-20 text-font-medium q-mb-md">Subsidiary Companies</h3>
+          <div class="row">
+            <h3 class="text-20 text-font-medium q-mb-md">
+              Subsidiary Companies
+            </h3>
+
+            <q-pagination
+              v-if="!isChildCompaniesLoading && childCompanies.length > 0"
+              :model-value="filterBy.page"
+              @update:model-value="(val) => updateFilterBy('page', val)"
+              :max="maxPage"
+              direction-links
+              gutter="8px"
+              color="brand"
+              class="q-ml-auto q-mb-md"
+            />
+          </div>
 
           <div
             v-if="isChildCompaniesLoading"
@@ -195,7 +210,9 @@
             <p class="text-18 text-italic text-secondary q-mb-md">
               This company has no registered subsidiary companies
             </p>
-            <div class="empty-state-container column items-center justify-center text-center q-py-md">
+            <div
+              class="empty-state-container column items-center justify-center text-center q-py-md"
+            >
               <q-img
                 src="/empty-states/empty-state-no-companies.svg"
                 spinner-color="grey-5"
@@ -239,26 +256,17 @@ const { company, isLoading } = useGetCompany(companyId)
 //parent company
 const parentId = computed(() => company.value?.parentId)
 
-const {
-  company: parentCompany,
-  isLoading: isParentCompanyLoading,
-  refetch: refetchParentCompany,
-} = useGetCompany(null) 
-
-watch(
-  parentId,
-  async (newId) => {
-    if (newId) {
-      await refetchParentCompany({ queryKey: ['company', newId] })
-    }
-  },
-  { immediate: true },
-)
+const { company: parentCompany, isLoading: isParentCompanyLoading } =
+  useGetCompany(parentId)
 
 //child companies
 const filterBy = reactive(companiesService.getDefaultFilterBy())
-const { companies: childCompanies, isLoading: isChildCompaniesLoading } =
-  useCompanies(filterBy)
+filterBy.pageSize = 6
+const {
+  companies: childCompanies,
+  isLoading: isChildCompaniesLoading,
+  maxPage,
+} = useCompanies(filterBy)
 
 watch(
   () => company.value?.id,
@@ -306,7 +314,7 @@ function updateFilterBy(key, value) {
   color: var(--q-success-dark);
 }
 
-.empty-state-container{
+.empty-state-container {
   background-color: #f5f5f5;
   border-radius: var(--medium-radius);
 }
