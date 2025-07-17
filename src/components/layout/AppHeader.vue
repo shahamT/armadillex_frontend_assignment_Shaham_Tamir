@@ -1,5 +1,8 @@
 <template>
-  <q-header elevated class="app-header bg-white no-shadow">
+  <q-header
+    elevated
+    class="app-header bg-white no-shadow"
+  >
     <q-toolbar class="grid no-shadow q-px-md full-height">
       <app-logo />
 
@@ -17,7 +20,7 @@ import UserMenu from '../layout/UserMenu.vue'
 @import '/src/css/setup/variables.scss';
 .app-header {
   height: $header-height;
-  z-index: 10000;
+  z-index: 1100;
   border-bottom: 1px solid $clr-border;
 
   .q-toolbar {
