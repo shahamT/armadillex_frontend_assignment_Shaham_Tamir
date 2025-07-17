@@ -66,7 +66,7 @@ import CompaniesFilterPanel from 'src/components/companies/CompaniesFilterPanel.
 import CompaniesList from 'src/components/companies/CompaniesList.vue'
 import CompanyWizard from 'src/components/companies/company-wizard/CompanyWizard.vue'
 
-//add company flow
+//'add company' flow related
 const isCompanyWizardOpen = ref(false)
 const companyWizardType = ref('add')
 

@@ -48,8 +48,8 @@ function toggleSort() {
     props.updateFilterBy('sortDir', 'desc')
   } else {
     // Clear sort
-    props.updateFilterBy('sortBy', '')
-    props.updateFilterBy('sortDir', 'asc')
+    props.updateFilterBy('sortBy', 'dateAdded')
+    props.updateFilterBy('sortDir', 'desc')
   }
 }
 </script>

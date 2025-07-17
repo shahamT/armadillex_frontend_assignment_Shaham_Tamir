@@ -224,6 +224,7 @@ const { filterBy, onUpdate, maxPage } = defineProps({
   },
 })
 
+
 //filter section expanded/collapsed
 const filterOpen = ref(false)
 
