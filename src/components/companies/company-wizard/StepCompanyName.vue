@@ -25,7 +25,7 @@
         <template v-slot:before-options>
           <div class="q-pa-sm text-primary text-subtitle2 bg-info">
             <q-img
-              src="public/imgs/ai-agent.png"
+              src="/imgs/ai-agent.png"
               alt="AI Agent"
               fit="contain"
               class="ai-avatar-small col-2 q-mr-md q-ml-sm"
@@ -78,7 +78,7 @@
       class="row items-center q-pt-md"
     >
       <q-img
-        src="public/imgs/ai-agent.png"
+        src="/imgs/ai-agent.png"
         alt="AI Agent"
         fit="contain"
         class="ai-avatar-big col-2 q-mr-md"

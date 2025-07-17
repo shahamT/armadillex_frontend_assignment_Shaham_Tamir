@@ -190,17 +190,22 @@
           <!-- empty state for child companies -->
           <div
             v-else-if="childCompanies.length === 0"
-            class="column items-center justify-center text-center"
+            class=""
           >
-            <q-img
-              src="public/empty-states/empty-state-no-companies.svg"
-              spinner-color="grey-5"
-              style="width: 100px; height: 100px"
-              fit="contain"
-            />
-            <p class="text-18 text-font-thin text-secondary">
-              This company does not have registered Subsidiary Companies
+            <p class="text-18 text-italic text-secondary q-mb-md">
+              This company has no registered subsidiary companies
             </p>
+            <div class="empty-state-container column items-center justify-center text-center q-py-md">
+              <q-img
+                src="/empty-states/empty-state-no-companies.svg"
+                spinner-color="grey-5"
+                style="width: 100px; height: 100px"
+                fit="contain"
+              />
+              <p class="text-18 text-font-thin text-secondary">
+                No companies to show
+              </p>
+            </div>
           </div>
 
           <!-- child companies list -->
@@ -232,19 +237,14 @@ const companyId = route.params.id
 const { company, isLoading } = useGetCompany(companyId)
 
 //parent company
-// const parentCompany = ref(null)
-// const isParentCompanyLoading = ref(false)
-
 const parentId = computed(() => company.value?.parentId)
 
-// Create a tracked company ref manually (starts as null)
 const {
   company: parentCompany,
   isLoading: isParentCompanyLoading,
   refetch: refetchParentCompany,
-} = useGetCompany(null) // starts with null
+} = useGetCompany(null) 
 
-// When parentId changes, trigger refetch
 watch(
   parentId,
   async (newId) => {
@@ -304,5 +304,10 @@ function updateFilterBy(key, value) {
 .positive-badge {
   background-color: #cdeedd;
   color: var(--q-success-dark);
+}
+
+.empty-state-container{
+  background-color: #f5f5f5;
+  border-radius: var(--medium-radius);
 }
 </style>

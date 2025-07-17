@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="col-4 row items-center">
+      <div class="col-3 row items-center">
         <p class="q-pr-xs">Company</p>
         <SortButton
           :sortKey="'name'"
@@ -49,6 +49,14 @@
         />
       </div>
 
+      <div class="col-2 row items-center">
+        <p class="q-pr-xs">Parent Company</p>
+      </div>
+
+      <div class="col-1 row items-center">
+        <p class="q-pr-xs"></p>
+      </div>
+
       <!-- Clear Sort button -->
       <div class="col-auto q-ml-auto q-mr-sm">
         <q-btn
@@ -76,7 +84,7 @@
       class="column items-center justify-center text-center"
     >
       <q-img
-        src="public/empty-states/empty-state-no-result.svg"
+        src="/empty-states/empty-state-no-result.svg"
         spinner-color="grey-5"
         style="width: 200px; height: 200px"
         fit="contain"

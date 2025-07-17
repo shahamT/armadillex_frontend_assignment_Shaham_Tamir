@@ -1,95 +1,151 @@
 <template>
   <router-link :to="{ name: 'company-details', params: { id: company.id } }">
-  <q-card
-    class="company-card-preview flex items-center"
-    style="height: 48px"
-    bordered
-  >
-    <div class="row items-center full-width">
-      <!-- ------flag------- -->
+    <q-card
+      class="company-card-preview flex items-center"
+      style="height: 48px"
+      bordered
+    >
+      <div class="row items-center full-width">
+        <!-- ------flag------- -->
 
-      <div class="col-auto q-pl-md q-pr-md">
-        <q-img
-          class="country-flag"
-          :src="getFlagUrl(company.country)"
-          fit="contain"
-          spinner-color="grey-5"
-        >
-          <q-tooltip
-            class="text-body2"
-            anchor="top left"
-            self="bottom left"
-            :offset="[17, 20]"
+        <div class="col-auto q-pl-md q-pr-md">
+          <q-img
+            class="country-flag"
+            :src="getFlagUrl(company.country)"
+            fit="contain"
+            spinner-color="grey-5"
           >
-            {{ company.country }} ({{ getCountryFullName(company.country) }})
-          </q-tooltip>
-        </q-img>
-      </div>
+            <q-tooltip
+              class="text-body2"
+              anchor="top left"
+              self="bottom left"
+              :offset="[17, 20]"
+            >
+              {{ company.country }} ({{ getCountryFullName(company.country) }})
+            </q-tooltip>
+          </q-img>
+        </div>
 
-      <!-- ------company name------- -->
-      <div class="col-4 q-pr-sm flex items-center">
-        <span
-          class="company-name text-18 text-font-medium text-primary text-no-wrap ellipsis relative-position"
-          style="display: inline-block"
-        >
-          {{ company.name }}
-          <q-tooltip
-            class="text-body2"
-            anchor="top middle"
-            self="bottom middle"
-            :offset="[0, 16]"
+        <!-- ------company name------- -->
+        <div class="col-3 q-pr-sm flex items-center">
+          <span
+            class="company-name text-18 text-font-medium text-primary text-no-wrap ellipsis relative-position"
+            style="display: inline-block"
           >
             {{ company.name }}
-          </q-tooltip>
-        </span>
-      </div>
+            <q-tooltip
+              class="text-body2"
+              anchor="top middle"
+              self="bottom middle"
+              :offset="[0, 16]"
+            >
+              {{ company.name }}
+            </q-tooltip>
+          </span>
+        </div>
 
-      <!-- ------DPF------- -->
-      <div class="col-2 q-pr-sm">
-        <q-icon
-          v-if="company.isDpfFound"
-          name="check_circle"
-          class="dpf-icon text-18"
-        />
-      </div>
-
-      <!-- ------AI------- -->
-      <div class="col-2 q-pr-sm">
-        <q-badge
-          class="ai-badge text-12 q-pr-sm"
-          v-if="company.providesAiServices"
-        >
+        <!-- ------DPF------- -->
+        <div class="col-2 q-pr-sm">
           <q-icon
-            name="smart_toy"
-            class="q-mr-xs"
+            v-if="company.isDpfFound"
+            name="check_circle"
+            class="dpf-icon text-18"
           />
-          AI
-        </q-badge>
-      </div>
+        </div>
 
-      <!-- ------Inactive------- -->
-      <div class="col-2 q-pr-sm">
-        <q-badge
-          class="inactive-badge text-12 q-pr-sm"
-          v-if="!company.active"
-        >
-          Inactive Company
-        </q-badge>
+        <!-- ------AI------- -->
+        <div class="col-2 q-pr-sm">
+          <q-badge
+            class="ai-badge text-12 q-pr-sm"
+            v-if="company.providesAiServices"
+          >
+            <q-icon
+              name="smart_toy"
+              class="q-mr-xs"
+            />
+            AI
+          </q-badge>
+        </div>
+
+        
+        <!-- ------Parent Company------- -->
+        <div class="col-2 q-pr-sm">
+          <!-- <div v-if="isParentCompanyLoading && company.parentId">loading...</div> -->
+          
+          <router-link
+          v-if="parentCompany"
+          :to="{
+            name: 'company-details',
+            params: { id: parentCompany.id },
+          }"
+            class="text-brand link"
+            >
+            {{ parentCompany.name }}
+          </router-link>
+        </div>
+
+        <!-- ------Inactive------- -->
+        <div class="col-1 q-pr-sm">
+          <q-badge
+            class="inactive-badge text-12 q-pr-sm"
+            v-if="!company.active"
+          >
+            Inactive Company
+          </q-badge>
+        </div>
+
       </div>
-    </div>
-  </q-card>
+    </q-card>
   </router-link>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
+import { useGetCompany } from 'src/composables/useGetCompany'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
 
-defineProps({
+const props = defineProps({
   company: {
     type: Object,
     required: true,
   },
 })
+
+//parent company fetching
+const parentCompany = ref(null)
+const isParentCompanyLoading = ref(false)
+
+async function fetchParentCompany(parentId) {
+  if (!parentId) return
+
+  const parentCompanyQuery = useGetCompany(parentId)
+
+  isParentCompanyLoading.value = parentCompanyQuery.isLoading.value
+
+  watch(parentCompanyQuery.isLoading, (val) => {
+    isParentCompanyLoading.value = val
+  })
+
+  watch(parentCompanyQuery.company, (val) => {
+    if (val) {
+      parentCompany.value = val
+    }
+  })
+}
+
+watch(
+  () => props.company,
+  (newCompany) => {
+    if (newCompany?.parentId) {
+      fetchParentCompany(newCompany.parentId)
+    } else {
+      parentCompany.value = null
+      isParentCompanyLoading.value = false
+    }
+  },
+  { immediate: true },
+)
+
 </script>
 
 <style lang="scss">
@@ -121,5 +177,12 @@ defineProps({
   .dpf-icon {
     color: var(--q-success);
   }
+
+  .link {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 }
 </style>

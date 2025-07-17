@@ -64,10 +64,15 @@ async function getCompanies(filterBy = getDefaultFilterBy()) {
     return 0
   })
 
-  const pageSize = 15
-  const startIdx = (filterBy.page - 1) * pageSize
-  const paginated = sorted.slice(startIdx, startIdx + pageSize)
+  const pageSize = isNaN(Number(filterBy.pageSize))
+  ? null
+  : Number(filterBy.pageSize)
 
+const paginated =
+  pageSize && pageSize > 0
+    ? sorted.slice((filterBy.page - 1) * pageSize, filterBy.page * pageSize)
+    : sorted
+    
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -162,6 +167,7 @@ function getDefaultFilterBy() {
     sortBy: 'dateAdded',
     sortDir: 'desc',
     page: 1,
+    pageSize: null,
   }
 }
 

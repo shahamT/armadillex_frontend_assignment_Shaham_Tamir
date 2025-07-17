@@ -82,7 +82,7 @@
           </div>
 
           <!-- Country select -->
-          <div class="col-3 q-ml-lg">
+          <div class="select-input col-2 q-ml-lg">
             <q-select
               :model-value="selectedCountryObj"
               @update:model-value="
@@ -123,8 +123,7 @@
               <template v-slot:prepend>
                 <q-img
                   :src="
-                    selectedCountryObj?.flagURL ||
-                    'public/imgs/placeholder_flag.jpg'
+                    selectedCountryObj?.flagURL || '/imgs/placeholder_flag.jpg'
                   "
                   fit="contain"
                   class="country-flag q-ml-xs q-mr-xs"
@@ -141,6 +140,40 @@
               </template>
             </q-select>
           </div>
+
+          <!-- Parent Company select -->
+          <q-select
+            class="col-2 select-input q-ml-lg"
+            v-model="selectedParentCompany"
+            outlined
+            dense
+            use-input
+            fill-input
+            clearable
+            hide-selected
+            placeholder="Parent Company"
+            :options="finalizedCompanies"
+            color="brand"
+            option-label="name"
+            :loading="isCompaniesLoading"
+            @filter="onSearch"
+          >
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.name }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No companies found
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
 
           <!-- Clear filters button -->
           <div
@@ -171,8 +204,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, reactive } from 'vue'
 import { getCountriesOptions } from 'src/services/util.service'
+import { useCompanies } from 'src/composables/useCompanies'
+import { companiesService } from 'src/services/api/companies.service'
 
 const { filterBy, onUpdate, maxPage } = defineProps({
   filterBy: {
@@ -199,6 +234,7 @@ const activeFilters = computed(() => {
   if (filterBy.active) count++
   if (filterBy.ai) count++
   if (filterBy.dpf) count++
+  if (filterBy.parentCompany) count++
   return count
 })
 
@@ -208,9 +244,11 @@ function clearFilters() {
   onUpdate('active', false)
   onUpdate('ai', false)
   onUpdate('dpf', false)
+  onUpdate('parentCompany', '')
+  selectedParentCompany.value = null
 }
 
-//---- select country filter -----
+//---- Country filter -----
 const allOptions = getCountriesOptions()
 const filteredOptions = ref([...allOptions])
 
@@ -231,6 +269,41 @@ function abortFilterFn() {
 const selectedCountryObj = computed(
   () => allOptions.find((opt) => opt.value === filterBy.country) || null,
 )
+
+//Parent company filter
+const finalizedCompanies = ref([])
+const selectedParentCompany = ref(null)
+
+const companyFilterBy = reactive({
+  ...companiesService.getDefaultFilterBy(),
+  search: '',        
+  sortBy: 'name',
+  sortDir: 'asc',
+  page: 1,
+  pageSize: null  
+})
+
+const { companies, isLoading: isCompaniesLoading } = useCompanies(
+  companyFilterBy,
+  'parentFilterSelect'
+)
+
+watch(companies, (newCompanies) => {
+  finalizedCompanies.value = [...newCompanies]
+})
+
+function onSearch(val, update) {
+  const search = val.toLowerCase()
+  finalizedCompanies.value = companies.value.filter((c) =>
+    c.name?.toLowerCase().includes(search)
+  )
+  update()
+}
+
+watch(selectedParentCompany, (val) => {
+  onUpdate('parentCompany', val?.id || '')
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -251,5 +324,9 @@ const selectedCountryObj = computed(
   max-height: 24px;
   border: 1px solid var(--q-secondary-light);
   border-radius: 2px;
+}
+
+.select-input {
+  min-width: 200px;
 }
 </style>

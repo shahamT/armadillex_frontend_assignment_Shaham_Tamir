@@ -38,6 +38,23 @@
       <p class="text-18 text-secondary q-ml-sm">Active</p>
     </div>
 
+    <div
+      v-if="!editableCompany.active"
+      class="info-container text-14 text-secondary row items-center justify-center no-wrap full-width q-py-sm q-px-md q-gutter-x-md"
+    >
+      <q-icon
+        name="info"
+        color="secondary"
+        class="q-ml-none"
+        size="md"
+      />
+      <span class="text-left">
+    
+        Inactive companies won’t appear in the list unless you enable <br> “Show inactive
+        companies” in the filters panel.
+      </span>
+    </div>
+
     <div class="row full-width q-mt-md">
       <q-btn
         v-if="!editableCompany.active"
@@ -75,8 +92,7 @@ const props = defineProps({
 })
 
 const { company, isLoading } = useGetCompany(props.savedCompanyId)
-const { saveCompanyAsync, isLoading: isSaving } =
-  useSaveCompany()
+const { saveCompanyAsync, isLoading: isSaving } = useSaveCompany()
 
 const editableCompany = ref(null)
 
@@ -100,4 +116,9 @@ async function saveCompany() {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.info-container{
+  background-color: #f5f5f5;
+  border-radius: var(--small-radius);
+}
+</style>

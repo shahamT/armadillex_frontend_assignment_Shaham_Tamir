@@ -73,7 +73,7 @@ export function getCountriesOptions() {
     label: data.countryName,
     value: code,
     description: code,
-    flagURL: getFlagUrl(code) || 'public/imgs/placeholder_flag.jpg',
+    flagURL: getFlagUrl(code) || '/imgs/placeholder_flag.jpg',
   }))
   return options
 }

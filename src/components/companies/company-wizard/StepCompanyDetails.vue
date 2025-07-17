@@ -72,7 +72,7 @@
       <template v-slot:prepend>
         <q-img
           :src="
-            selectedCountryOption?.flagURL || 'public/imgs/placeholder_flag.jpg'
+            selectedCountryOption?.flagURL || '/imgs/placeholder_flag.jpg'
           "
           fit="contain"
           class="country-flag q-ml-xs q-mr-xs"
@@ -87,6 +87,7 @@
       </template>
     </q-select>
 
+    <!-- parent company select -->
     <p class="text-16 text-font-thin q-pt-md q-pb-xs q-pt-sm q-ml-sm">
       Parent Company
     </p>
@@ -105,7 +106,6 @@
       option-label="name"
       :loading="isCompaniesLoading"
       @filter="onSearch"
-      @virtual-scroll="onLoadMore"
     >
       <!-- Option slot -->
       <template v-slot:option="scope">
@@ -119,7 +119,8 @@
       <!-- No results -->
       <template v-slot:no-option>
         <q-item>
-          <q-item-section class="text-grey">No companies found</q-item-section>
+          <q-item-section v-if="isCompaniesLoading" class="text-grey">Searching...</q-item-section>
+          <q-item-section v-else class="text-grey">No companies found</q-item-section>
         </q-item>
       </template>
     </q-select>
@@ -205,16 +206,8 @@ async function onSubmit() {
   }
 }
 
-// function resetForm() {
-//   Object.assign(newCompany, companiesService.getEmptyCompany())
-//   selectedParentCompany.value = null
-//   selectedCountryOption.value = null
-// }
 
 //---- select parent company -----
-
-const searchTerm = ref('')
-const companyPage = ref(1)
 const finalizedCompanies = ref([])
 const selectedParentCompany = ref(null)
 
@@ -224,39 +217,25 @@ const companyFilterBy = reactive({
   sortBy: 'name',
   sortDir: 'asc',
   page: 1,
+  pageSize: null
 })
 
 const { companies, isLoading: isCompaniesLoading } =
-  useCompanies(companyFilterBy)
-
-watch([searchTerm, companyPage], () => {
-  companyFilterBy.search = searchTerm.value
-  companyFilterBy.page = companyPage.value
-})
+  useCompanies(companyFilterBy, 'addCompanySelect')
 
 watch(companies, (newCompanies) => {
-  if (companyPage.value === 1) {
-    finalizedCompanies.value = [...newCompanies]
-  } else {
-    finalizedCompanies.value.push(...newCompanies)
-  }
+  finalizedCompanies.value = [...newCompanies]
 })
 
 function onSearch(val, update) {
-  searchTerm.value = val
-  companyPage.value = 1
+  companyFilterBy.search = val
   update()
-}
-
-function onLoadMore({ to }) {
-  if (to === finalizedCompanies.value.length - 1) {
-    companyPage.value++
-  }
 }
 
 function onUpdate(key, val) {
   newCompany[key] = val
 }
+
 
 //---- select country -----
 const allOptions = getCountriesOptions()

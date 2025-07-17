@@ -77,6 +77,7 @@ function openAddCompanyWizard() {
 
 //set filter by
 const filterBy = reactive(companiesService.getDefaultFilterBy())
+filterBy.pageSize = 15
 const { companies, maxPage, isLoading } = useCompanies(filterBy)
 
 function updateFilterBy(key, value) {
