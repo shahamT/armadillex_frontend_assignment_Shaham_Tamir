@@ -175,7 +175,7 @@ import { useSaveCompany } from 'src/composables/useSaveCompany'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 import { getCountriesOptions } from 'src/services/util.service'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps({
   onNextStep: Function,
@@ -228,10 +228,16 @@ const companyFilterBy = reactive({
   pageSize: null,
 })
 
-const { companies, isLoading: isCompaniesLoading } = useCompanies(
-  companyFilterBy,
-  'addCompanySelect',
-)
+const {
+  companies,
+  isLoading: isCompaniesLoading,
+  refetch: refetchCompanies,
+} = useCompanies(companyFilterBy, 'addCompanySelect')
+
+onMounted(() => {
+  companyFilterBy.search = null
+  refetchCompanies()
+})
 
 watch(companies, (newCompanies) => {
   finalizedCompanies.value = [...newCompanies]

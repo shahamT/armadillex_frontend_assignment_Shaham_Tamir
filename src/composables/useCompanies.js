@@ -34,5 +34,6 @@ export function useCompanies(filterBy, customKey) {
     isLoading: companiesQuery.isLoading,
     error: companiesQuery.error,
     maxPage,
+    refetch: companiesQuery.refetch,
   }
 }
