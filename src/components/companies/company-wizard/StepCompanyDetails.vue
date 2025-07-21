@@ -1,6 +1,5 @@
 <template>
   <q-form
-    ref="companyForm"
     @submit.prevent="onSubmit"
   >
     <!-- company name input -->
@@ -37,8 +36,8 @@
 
     <q-select
       class="text-18"
-      v-model="selectedCountryOption"
-      @update:model-value="(val) => onUpdate('country', val?.value || '')"
+      :model-value="selectedCountryObj"
+      @update:model-value="onCountrySelect"
       outlined
       clearable
       use-input
@@ -47,8 +46,7 @@
       placeholder="Select Country"
       :options="filteredOptions"
       color="brand"
-      @filter="filterFn"
-      @filter-abort="abortFilterFn"
+      @filter="onCountryFilter"
       :rules="[(val) => !!val || 'Country is required']"
     >
       <!-- country Option template -->
@@ -74,7 +72,7 @@
       <!-- country flag prefix on selection -->
       <template v-slot:prepend>
         <q-img
-          :src="selectedCountryOption?.flagURL || '/imgs/placeholder_flag.jpg'"
+          :src="selectedCountryObj?.flagURL || '/imgs/placeholder_flag.jpg'"
           fit="contain"
           class="country-flag q-ml-xs q-mr-xs"
         />
@@ -102,10 +100,10 @@
       clearable
       hide-selected
       placeholder="Parent Company"
-      :options="finalizedCompanies"
+      :options="parentCompanies"
       color="brand"
       option-label="name"
-      :loading="isCompaniesLoading"
+      :loading="isparentCompaniesLoading"
       @filter="onSearch"
     >
       <!-- parent company Option template -->
@@ -121,7 +119,7 @@
       <template v-slot:no-option>
         <q-item>
           <q-item-section
-            v-if="isCompaniesLoading"
+            v-if="isparentCompaniesLoading"
             class="text-grey"
             >Searching...</q-item-section
           >
@@ -175,13 +173,11 @@ import { useSaveCompany } from 'src/composables/useSaveCompany'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 import { getCountriesOptions } from 'src/services/util.service'
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
-const props = defineProps({
+const {onNextStep,selectedCompany} = defineProps({
   onNextStep: Function,
-  onPreviousStep: Function,
   selectedCompany: Object,
-  savedCompanyId: String,
 })
 
 const emit = defineEmits(['update:savedCompanyId'])
@@ -190,7 +186,7 @@ const newCompany = reactive(companiesService.getEmptyCompany())
 
 //fill new company with selected country from step 1
 watch(
-  () => props.selectedCompany,
+  () => selectedCompany,
   (newVal) => {
     if (newVal) {
       newCompany.name = newVal.label
@@ -205,60 +201,52 @@ watch(
 
 const { saveCompanyAsync, isLoading: isAddLoading } = useSaveCompany()
 
+//submiting the form and adding the company
 async function onSubmit() {
   try {
     const savedCompany = await saveCompanyAsync(newCompany)
     emit('update:savedCompanyId', savedCompany?.id)
-    props.onNextStep?.()
+    onNextStep?.()
   } catch (err) {
     console.error('Failed to add company:', err)
   }
 }
 
+//general function to update the 'new company' object
+function onUpdate(key, val) {
+  newCompany[key] = val
+}
+
 //---- select parent company -----
-const finalizedCompanies = ref([])
 const selectedParentCompany = ref(null)
 
+//set filterby for companies with default sort by name
 const companyFilterBy = reactive({
   ...companiesService.getDefaultFilterBy(),
-  search: '',
   sortBy: 'name',
   sortDir: 'asc',
-  page: 1,
-  pageSize: null,
 })
 
+//fetch companies
 const {
-  companies,
-  isLoading: isCompaniesLoading,
-  refetch: refetchCompanies,
+  companies: parentCompanies,
+  isLoading: isparentCompaniesLoading,
 } = useCompanies(companyFilterBy, 'addCompanySelect')
 
-onMounted(() => {
-  companyFilterBy.search = null
-  refetchCompanies()
-})
-
-watch(companies, (newCompanies) => {
-  finalizedCompanies.value = [...newCompanies]
-})
-
+//filter companies
 function onSearch(val, update) {
   companyFilterBy.search = val
   update()
 }
 
-function onUpdate(key, val) {
-  newCompany[key] = val
-}
 
 //---- select country -----
-const allOptions = getCountriesOptions()
-const filteredOptions = ref([...allOptions])
+const allCountries = getCountriesOptions()
+const filteredOptions = ref([...allCountries])
 
-function filterFn(val, update) {
+function onCountryFilter(val, update) {
   const search = val.toLowerCase()
-  filteredOptions.value = allOptions.filter(
+  filteredOptions.value = allCountries.filter(
     (opt) =>
       opt.label.toLowerCase().includes(search) ||
       opt.description.toLowerCase().includes(search),
@@ -266,18 +254,13 @@ function filterFn(val, update) {
   update()
 }
 
-function abortFilterFn() {
-  filteredOptions.value = [...allOptions]
-}
+const selectedCountryObj = computed(
+  () => allCountries.find((opt) => opt.value === newCompany.country) || null,
+)
 
-const selectedCountryOption = computed({
-  get() {
-    return allOptions.find((opt) => opt.value === newCompany.country) || null
-  },
-  set(val) {
-    newCompany.country = val?.value || ''
-  },
-})
+function onCountrySelect(val) {
+  onUpdate('country', val?.value || '')
+}
 </script>
 
 <style scoped lang="scss">

@@ -18,8 +18,9 @@ export function useSaveCompany() {
         isNew ? notifyMsgs.companyAdded : notifyMsgs.companyUpdated,
       )
     },
-    onError: () => {
-      notifyService.error(notifyMsgs.companyUpdatedFail)
+    onError: (savedCompany, originalCompany) => {
+      const isNew = !originalCompany.id
+      notifyService.error( isNew ? notifyMsgs.companyAddedFail :notifyMsgs.companyUpdatedFail)
     },
   })
 

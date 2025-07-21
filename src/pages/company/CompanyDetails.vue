@@ -253,7 +253,6 @@ const { company, isLoading } = useGetCompany(companyId)
 const parentId = computed(() => {
   return company.value?.parentId ?? null
 })
-
 const { company: parentCompany, isLoading: isParentCompanyLoading } =
   useGetCompany(parentId)
 

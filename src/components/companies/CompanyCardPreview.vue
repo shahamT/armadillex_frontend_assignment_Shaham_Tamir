@@ -1,5 +1,7 @@
 <template>
-  <router-link :to="{ name: 'company-details', params: { id: company.id } }">
+  <router-link
+    :to="{ name: ROUTES.COMPANY_DETAILS, params: { id: company.id } }"
+  >
     <q-card
       class="company-card-preview flex items-center"
       style="height: 48px"
@@ -102,21 +104,19 @@
 import { computed } from 'vue'
 import { useGetCompany } from 'src/composables/useGetCompany'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
+import { ROUTES } from 'src/router/const'
 
-const props = defineProps({
-  company: {
-    type: Object,
-    required: true,
-  },
+const { company } = defineProps({
+  company: Object,
 })
 
 //parent company fetching
 const parentId = computed(() => {
-  return props.company ? (props.company.parentId ?? null) : null
+  return company ? (company.parentId ?? null) : null
 })
 
 const { company: parentCompany, isLoading: isParentCompanyLoading } =
-  useGetCompany(parentId.value)
+  useGetCompany(parentId)
 </script>
 
 <style lang="scss">

@@ -95,8 +95,7 @@
               placeholder="Filter by country"
               :options="filteredCountries"
               color="brand"
-              @filter="filterFn"
-              @filter-abort="abortFilterFn"
+              @filter="onCountryFilter"
             >
               <!-- Country Option template -->
               <template v-slot:option="scope">
@@ -142,7 +141,8 @@
           <!-- Parent Company select -->
           <q-select
             class="col-2 select-input q-ml-lg"
-            v-model="selectedParentCompany"
+            :model-value="selectedParentCompany"
+            @update:model-value="onParentCompanySelect"
             outlined
             dense
             use-input
@@ -150,7 +150,7 @@
             clearable
             hide-selected
             placeholder="Parent Company"
-            :options="finalizedCompanies"
+            :options="parentCompanies"
             color="brand"
             option-label="name"
             :loading="isCompaniesLoading"
@@ -168,7 +168,16 @@
             <!-- Parent Company No results template -->
             <template v-slot:no-option>
               <q-item>
-                <q-item-section class="text-grey">
+                <q-item-section
+                  v-if="isCompaniesLoading"
+                  class="text-grey"
+                >
+                  Searching...
+                </q-item-section>
+                <q-item-section
+                  v-else
+                  class="text-grey"
+                >
                   No companies found
                 </q-item-section>
               </q-item>
@@ -199,7 +208,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, reactive } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { getCountriesOptions } from 'src/services/util.service'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
@@ -252,7 +261,7 @@ function handleClearFilters() {
 const allCountries = getCountriesOptions()
 const filteredCountries = ref([...allCountries])
 
-function filterFn(val, update) {
+function onCountryFilter(val, update) {
   const search = val.toLowerCase()
   filteredCountries.value = allCountries.filter(
     (opt) =>
@@ -260,10 +269,6 @@ function filterFn(val, update) {
       opt.description.toLowerCase().includes(search),
   )
   update()
-}
-
-function abortFilterFn() {
-  filteredCountries.value = [...allCountries]
 }
 
 const selectedCountryObj = computed(
@@ -275,38 +280,30 @@ function onCountrySelect(val) {
 }
 
 //Parent company filter
-const finalizedCompanies = ref([])
 const selectedParentCompany = ref(null)
 
+//set filterby for companies with default sort by name
 const companyFilterBy = reactive({
   ...companiesService.getDefaultFilterBy(),
-  search: '',
   sortBy: 'name',
   sortDir: 'asc',
-  page: 1,
-  pageSize: null,
 })
 
-const { companies, isLoading: isCompaniesLoading } = useCompanies(
-  companyFilterBy,
-  'parentFilterSelect',
-)
+//fetch companies
+const { companies: parentCompanies, isLoading: isCompaniesLoading } =
+  useCompanies(companyFilterBy, 'parentFilterSelect')
 
-watch(companies, (newCompanies) => {
-  finalizedCompanies.value = [...newCompanies]
-})
-
-function onSearch(val, update) {
-  const search = val.toLowerCase()
-  finalizedCompanies.value = companies.value.filter((c) =>
-    c.name?.toLowerCase().includes(search),
-  )
-  update()
+//apply parent company in filterby (for the main companies list)
+function onParentCompanySelect(val) {
+  updateFilterBy('parentCompany', val?.id || '')
 }
 
-watch(selectedParentCompany, (val) => {
-  updateFilterBy('parentCompany', val?.id || '')
-})
+//filter companies options in input
+function onSearch(val, update) {
+  const search = val.toLowerCase()
+  companyFilterBy.search = search
+  update()
+}
 </script>
 
 <style scoped lang="scss">

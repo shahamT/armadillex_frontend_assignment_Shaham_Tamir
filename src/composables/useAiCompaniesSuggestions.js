@@ -7,7 +7,7 @@ export function useAiCompaniesSuggestions() {
   const query = useQuery({
     queryKey: [QUERY_KEYS.AI_COMPANIES],
     queryFn: companiesService.getCompaniesOptions,
-    enabled: false, // prevent automatic fetch — we control it manually
+    enabled: false, // prevent automatic fetch - triggered manually from the component
     refetchOnWindowFocus: false,
     staleTime: 0,
     cacheTime: 0,

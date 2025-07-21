@@ -33,7 +33,6 @@
           <div class="text-h3 text-28 q-pb-md">{{ title }} Company</div>
           <StepCompanyDetails
             :onNextStep="goNext"
-            :onPreviousStep="goBack"
             v-model:selectedCompany="selectedCompany"
             v-model:savedCompanyId="savedCompanyId"
           />
@@ -89,9 +88,9 @@ watch(modelValue, (val) => {
   }
 })
 
-function goBack() {
-  if (step.value > startStep.value) step.value--
-}
+// function goBack() {
+//   if (step.value > startStep.value) step.value--
+// }
 
 function goNext() {
   if (step.value < 3) {

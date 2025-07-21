@@ -1,5 +1,5 @@
 <template>
-  <q-card class="list-container q-pa-lg">
+  <q-card class="q-pa-lg">
     <!-- card header -->
     <q-card-section class="row items-center q-pa-none q-mb-md">
       <h1 class="text-40">Companies</h1>
@@ -42,8 +42,7 @@
     <!-- bottom pagination -->
     <div class="row justify-end q-mt-auto q-pa-md">
       <q-pagination
-        :model-value="filterBy.page"
-        @update:model-value="(val) => updateFilterBy('page', val)"
+        v-model="filterBy.page"
         :max="maxPage"
         direction-links
         gutter="8px"
@@ -60,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 
@@ -78,12 +77,24 @@ function openAddCompanyWizard() {
 }
 
 //set filter by
-const filterBy = ref(companiesService.getDefaultFilterBy())
-filterBy.value.pageSize = 15
+const filterBy = reactive({
+  ...companiesService.getDefaultFilterBy(),
+  pageSize: 15,
+})
 
-const { companies, maxPage, isLoading } = useCompanies(filterBy)
+const { companies, maxPage, isLoading } = useCompanies(filterBy, 'main-list')
 
 function updateFilterBy(key, value) {
-  filterBy.value[key] = value
+  filterBy[key] = value
 }
 </script>
+
+<style scoped lang="scss">
+@import '/src/css/setup/variables.scss';
+
+.q-card {
+  min-height: calc(100vh - $header-height - $main-page-margin * 2);
+  display: flex;
+  flex-direction: column;
+}
+</style>

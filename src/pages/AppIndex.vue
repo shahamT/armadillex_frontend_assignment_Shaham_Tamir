@@ -3,7 +3,7 @@
     <app-header />
 
     <q-page-container class="page-container">
-      <q-page class="q-pa-md">
+      <q-page class="q-pa-md ">
         <router-view />
       </q-page>
     </q-page-container>
@@ -12,6 +12,7 @@
 
 <script setup>
 import AppHeader from 'src/components/layout/AppHeader.vue'
+
 </script>
 
 <style lang="scss">

@@ -49,6 +49,8 @@
   --modal-width-lg: clamp(750px, 80vw, 900px);
   --modal-width-xl: clamp(900px, 80vw, 1200px);
   --modal-max-height: calc(100vh - 150px);
+
+  --main-page-margin: 16px
 }
 
 // SCSS Colors
@@ -105,3 +107,7 @@ $modal-max-height: var(--modal-max-height);
 $break-narrow: 980px;
 $break-normal: 1320px;
 $break-wide: 1920px;
+
+
+//SPACING
+$main-page-margin: var(--main-page-margin)
