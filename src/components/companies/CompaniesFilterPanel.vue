@@ -81,6 +81,7 @@
             />
           </div>
 
+          <!-- Country select -->
           <CountrySelect
             :onCountrySelect="onCountrySelect"
             :selectedCountryCode="filterBy.country"
@@ -89,50 +90,12 @@
           />
 
           <!-- Parent Company select -->
-          <q-select
-            class="col-2 select-input q-ml-lg"
-            :model-value="selectedParentCompany"
-            @update:model-value="onParentCompanySelect"
-            outlined
-            dense
-            use-input
-            fill-input
-            clearable
-            hide-selected
-            placeholder="Parent Company"
-            :options="parentCompanies"
-            color="brand"
-            option-label="name"
-            :loading="isCompaniesLoading"
-            @filter="onSearch"
-          >
-            <!-- Parent Company option template -->
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.name }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-
-            <!-- Parent Company No results template -->
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section
-                  v-if="isCompaniesLoading"
-                  class="text-grey"
-                >
-                  Searching...
-                </q-item-section>
-                <q-item-section
-                  v-else
-                  class="text-grey"
-                >
-                  No companies found
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+          <CompanySelect
+            :onCompanySelect="onParentCompanySelect"
+            :selectedCompanyId="filterBy.parentCompany"
+            class="q-ml-lg col-2"
+            :dense="true"
+          />
 
           <!-- Clear filters button -->
           <div
@@ -158,10 +121,9 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
-import { useCompanies } from 'src/composables/useCompanies'
-import { companiesService } from 'src/services/api/companies.service'
+import { ref, computed } from 'vue'
 import CountrySelect from '../common/CountrySelect.vue'
+import CompanySelect from '../common/CompanySelect.vue'
 
 const { filterBy, updateFilterBy, maxPage } = defineProps({
   filterBy: {
@@ -199,7 +161,6 @@ function clearFilters() {
   updateFilterBy('ai', false)
   updateFilterBy('dpf', false)
   updateFilterBy('parentCompany', '')
-  selectedParentCompany.value = null
 }
 
 function handleClearFilters() {
@@ -207,36 +168,14 @@ function handleClearFilters() {
   filterOpen.value = false
 }
 
-//---- Country filter -----
-
+//Country select
 function onCountrySelect(val) {
   updateFilterBy('country', val?.value || '')
 }
 
-//Parent company filter
-const selectedParentCompany = ref(null)
-
-//set filterby for companies with default sort by name
-const companyFilterBy = reactive({
-  ...companiesService.getDefaultFilterBy(),
-  sortBy: 'name',
-  sortDir: 'asc',
-})
-
-//fetch companies
-const { companies: parentCompanies, isLoading: isCompaniesLoading } =
-  useCompanies(companyFilterBy, 'parentFilterSelect')
-
-//apply parent company in filterby (for the main companies list)
+//Company select
 function onParentCompanySelect(val) {
   updateFilterBy('parentCompany', val?.id || '')
-}
-
-//filter companies options in input
-function onSearch(val, update) {
-  const search = val.toLowerCase()
-  companyFilterBy.search = search
-  update()
 }
 </script>
 

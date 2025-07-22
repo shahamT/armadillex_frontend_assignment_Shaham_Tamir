@@ -39,51 +39,16 @@
       :required="true"
     />
 
-    <!-- parent company select -->
+    <!-- Parent Company select -->
     <p class="text-16 text-font-thin q-pt-md q-pb-xs q-pt-sm q-ml-sm">
       Parent Company
     </p>
-    <q-select
-      class="text-18 q-pb-lg"
-      v-model="selectedParentCompany"
-      @update:model-value="(val) => onUpdate('parentId', val?.id || null)"
-      outlined
-      use-input
-      fill-input
-      clearable
-      hide-selected
-      placeholder="Parent Company"
-      :options="parentCompanies"
-      color="brand"
-      option-label="name"
-      :loading="isparentCompaniesLoading"
-      @filter="onSearch"
-    >
-      <!-- parent company Option template -->
-      <template v-slot:option="scope">
-        <q-item v-bind="scope.itemProps">
-          <q-item-section>
-            <q-item-label>{{ scope.opt.name }}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </template>
-
-      <!-- parent company No results template-->
-      <template v-slot:no-option>
-        <q-item>
-          <q-item-section
-            v-if="isparentCompaniesLoading"
-            class="text-grey"
-            >Searching...</q-item-section
-          >
-          <q-item-section
-            v-else
-            class="text-grey"
-            >No companies found</q-item-section
-          >
-        </q-item>
-      </template>
-    </q-select>
+    
+    <CompanySelect
+      :onCompanySelect="onParentCompanySelect"
+      :selectedCompanyId="newCompany.parentId"
+      class="q-pb-lg"
+    />
 
     <!-- DPF Toggle -->
     <p class="text-16 text-font-thin q-pb-xs q-pt-sm q-ml-sm">Attributes</p>
@@ -123,10 +88,10 @@
 
 <script setup>
 import { useSaveCompany } from 'src/composables/useSaveCompany'
-import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
-import { reactive, ref, watch } from 'vue'
+import { reactive, watch } from 'vue'
 import CountrySelect from 'src/components/common/CountrySelect.vue'
+import CompanySelect from 'src/components/common/CompanySelect.vue'
 
 const { onNextStep, selectedCompany } = defineProps({
   onNextStep: Function,
@@ -170,28 +135,12 @@ function onUpdate(key, val) {
   newCompany[key] = val
 }
 
-//---- select parent company -----
-const selectedParentCompany = ref(null)
-
-//set filterby for companies with default sort by name
-const companyFilterBy = reactive({
-  ...companiesService.getDefaultFilterBy(),
-  sortBy: 'name',
-  sortDir: 'asc',
-})
-
-//fetch companies
-const { companies: parentCompanies, isLoading: isparentCompaniesLoading } =
-  useCompanies(companyFilterBy, 'addCompanySelect')
-
-//filter companies
-function onSearch(val, update) {
-  companyFilterBy.search = val
-  update()
+//select company
+function onParentCompanySelect(val) {
+  onUpdate('parentId', val?.id || null)
 }
 
-//---- select country -----
-
+//select country
 function onCountrySelect(val) {
   onUpdate('country', val?.value || '')
 }
