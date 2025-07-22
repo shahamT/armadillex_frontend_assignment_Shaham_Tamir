@@ -1,3 +1,4 @@
+import { storageService } from '../storage.service'
 import { getFlagUrl, makeId } from '../util.service'
 
 export const companiesService = {
@@ -16,13 +17,13 @@ const COMPANIES_STORAGE_KEY = 'COMPANIES'
 //Get Companies
 
 async function getCompanies(filterBy = getDefaultFilterBy()) {
-  let companies = loadCompaniesFromStorage()
+  let rawCompanies = loadCompaniesFromStorage()
 
-  if (!companies) {
-    companies = createDemoCompanies()
+  if (!rawCompanies) {
+    rawCompanies = createDemoCompanies()
   }
 
-  const refactored = _refactorCompanies(companies)
+  const refactored = _refactorCompanies(rawCompanies)
 
   const filtered = refactored.filter((company) => {
     //text search by either name or legal name
@@ -137,13 +138,12 @@ function getCompanyById(companyId) {
 
 //======== Helpers ========
 function createDemoCompanies() {
-  localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(demoCompanies))
+  storageService.set(COMPANIES_STORAGE_KEY,demoCompanies)
   return demoCompanies
 }
 
 function loadCompaniesFromStorage() {
-  const json = localStorage.getItem(COMPANIES_STORAGE_KEY)
-  return json ? JSON.parse(json) : null
+  return storageService.get(COMPANIES_STORAGE_KEY)
 }
 
 function getEmptyCompany() {

@@ -238,7 +238,7 @@
 <script setup>
 import CompaniesList from 'src/components/companies/CompaniesList.vue'
 import { useCompanies } from 'src/composables/useCompanies'
-import { useGetCompany } from 'src/composables/useGetCompany'
+import { useCompany } from 'src/composables/useCompany'
 import { ROUTES } from 'src/router/const'
 import { companiesService } from 'src/services/api/companies.service'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
@@ -247,14 +247,14 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const companyId = computed(() => route.params.id)
-const { company, isLoading } = useGetCompany(companyId)
+const { company, isLoading } = useCompany(companyId)
 
 //parent company fetching
 const parentId = computed(() => {
   return company.value?.parentId ?? null
 })
 const { company: parentCompany, isLoading: isParentCompanyLoading } =
-  useGetCompany(parentId)
+  useCompany(parentId)
 
 //child companies
 const filterBy = reactive(companiesService.getDefaultFilterBy())

@@ -49,6 +49,7 @@
         color="brand"
       />
     </div>
+
   </q-card>
 
   <!-- dialog for add-company flow -->
@@ -59,7 +60,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import {reactive, ref } from 'vue'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
 
@@ -87,6 +88,7 @@ const { companies, maxPage, isLoading } = useCompanies(filterBy, 'main-list')
 function updateFilterBy(key, value) {
   filterBy[key] = value
 }
+
 </script>
 
 <style scoped lang="scss">

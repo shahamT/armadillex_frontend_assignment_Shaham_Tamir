@@ -102,7 +102,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useGetCompany } from 'src/composables/useGetCompany'
+import { useCompany } from 'src/composables/useCompany'
 import { getCountryFullName, getFlagUrl } from 'src/services/util.service'
 import { ROUTES } from 'src/router/const'
 
@@ -116,7 +116,7 @@ const parentId = computed(() => {
 })
 
 const { company: parentCompany, isLoading: isParentCompanyLoading } =
-  useGetCompany(parentId)
+  useCompany(parentId)
 </script>
 
 <style lang="scss">

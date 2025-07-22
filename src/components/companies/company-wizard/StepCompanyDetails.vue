@@ -1,7 +1,5 @@
 <template>
-  <q-form
-    @submit.prevent="onSubmit"
-  >
+  <q-form @submit.prevent="onSubmit">
     <!-- company name input -->
     <p class="text-16 text-font-thin q-pb-xs q-ml-sm">Company Name *</p>
     <q-input
@@ -175,7 +173,7 @@ import { companiesService } from 'src/services/api/companies.service'
 import { getCountriesOptions } from 'src/services/util.service'
 import { computed, reactive, ref, watch } from 'vue'
 
-const {onNextStep,selectedCompany} = defineProps({
+const { onNextStep, selectedCompany } = defineProps({
   onNextStep: Function,
   selectedCompany: Object,
 })
@@ -228,17 +226,14 @@ const companyFilterBy = reactive({
 })
 
 //fetch companies
-const {
-  companies: parentCompanies,
-  isLoading: isparentCompaniesLoading,
-} = useCompanies(companyFilterBy, 'addCompanySelect')
+const { companies: parentCompanies, isLoading: isparentCompaniesLoading } =
+  useCompanies(companyFilterBy, 'addCompanySelect')
 
 //filter companies
 function onSearch(val, update) {
   companyFilterBy.search = val
   update()
 }
-
 
 //---- select country -----
 const allCountries = getCountriesOptions()

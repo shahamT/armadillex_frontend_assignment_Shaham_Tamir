@@ -68,7 +68,7 @@
         color="brand"
         label="Keep it Inactive"
         class="text-18 light-radius full-width"
-        @click="props.closeWizard"
+        @click="closeWizard"
       />
       <q-btn
         v-else
@@ -86,16 +86,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useGetCompany } from 'src/composables/useGetCompany'
+import { computed, ref, watch } from 'vue'
+import { useCompany } from 'src/composables/useCompany'
 import { useSaveCompany } from 'src/composables/useSaveCompany'
 
-const props = defineProps({
+const { savedCompanyId, closeWizard } = defineProps({
   savedCompanyId: String,
   closeWizard: Function,
 })
 
-const { company, isLoading } = useGetCompany(props.savedCompanyId)
+const savedCompanyIdRef = computed(() => savedCompanyId) //turning into ref for useCompany hook competability
+const { company, isLoading } = useCompany(savedCompanyIdRef)
 const { saveCompanyAsync, isLoading: isSaving } = useSaveCompany()
 
 const editableCompany = ref(null)
@@ -113,7 +114,7 @@ watch(
 async function saveCompany() {
   try {
     await saveCompanyAsync(editableCompany.value)
-    props.closeWizard()
+    closeWizard()
   } catch (err) {
     console.error('Failed to update company:', err)
   }
