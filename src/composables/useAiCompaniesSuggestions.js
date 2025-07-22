@@ -8,10 +8,6 @@ export function useAiCompaniesSuggestions() {
     queryKey: [QUERY_KEYS.AI_COMPANIES],
     queryFn: companiesService.getCompaniesOptions,
     enabled: false, // prevent automatic fetch - triggered manually from the component
-    refetchOnWindowFocus: false,
-    staleTime: 0,
-    cacheTime: 0,
-    refetchOnReconnect: true,
   })
 
   const companies = computed(() =>
@@ -21,6 +17,8 @@ export function useAiCompaniesSuggestions() {
   return {
     companies,
     isLoading: query.isLoading,
+    isError: query.isError,
+    isSuccess: query.isSuccess,
     error: query.error,
     refetch: query.refetch,
   }

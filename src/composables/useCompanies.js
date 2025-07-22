@@ -7,7 +7,7 @@ export function useCompanies(filterBy, customKey) {
   const key = customKey || 'default'
 
   const companiesQuery = useQuery({
-    queryKey: [QUERY_KEYS.COMPANIES, filterBy, key ],
+    queryKey: [QUERY_KEYS.COMPANIES, filterBy, key],
     queryFn: async () => {
       return await companiesService.getCompanies(filterBy)
     },
@@ -27,6 +27,8 @@ export function useCompanies(filterBy, customKey) {
   return {
     companies,
     isLoading: companiesQuery.isLoading,
+    isError: companiesQuery.isError,
+    isSuccess: companiesQuery.isSuccess,
     error: companiesQuery.error,
     maxPage,
     refetch: companiesQuery.refetch,
