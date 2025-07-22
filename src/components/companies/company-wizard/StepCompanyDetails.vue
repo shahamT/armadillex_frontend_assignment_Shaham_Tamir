@@ -32,57 +32,12 @@
       Headquarters Country *
     </p>
 
-    <q-select
-      class="text-18"
-      :model-value="selectedCountryObj"
-      @update:model-value="onCountrySelect"
-      outlined
-      clearable
-      use-input
-      hide-selected
-      fill-input
-      placeholder="Select Country"
-      :options="filteredOptions"
-      color="brand"
-      @filter="onCountryFilter"
-      :rules="[(val) => !!val || 'Country is required']"
-    >
-      <!-- country Option template -->
-      <template v-slot:option="scope">
-        <q-item v-bind="scope.itemProps">
-          <q-item-section avatar>
-            <q-img
-              :src="scope.opt.flagURL"
-              fit="contain"
-              class="country-flag"
-            />
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label>{{ scope.opt.label }}</q-item-label>
-            <q-item-label caption>
-              {{ scope.opt.description }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </template>
-
-      <!-- country flag prefix on selection -->
-      <template v-slot:prepend>
-        <q-img
-          :src="selectedCountryObj?.flagURL || '/imgs/placeholder_flag.jpg'"
-          fit="contain"
-          class="country-flag q-ml-xs q-mr-xs"
-        />
-      </template>
-
-      <!-- country No results template -->
-      <template v-slot:no-option>
-        <q-item>
-          <q-item-section class="text-grey">No countries found</q-item-section>
-        </q-item>
-      </template>
-    </q-select>
+    <CountrySelect
+      ref="countrySelectRef"
+      :onCountrySelect="onCountrySelect"
+      :selectedCountryCode="newCompany.country"
+      :required="true"
+    />
 
     <!-- parent company select -->
     <p class="text-16 text-font-thin q-pt-md q-pb-xs q-pt-sm q-ml-sm">
@@ -170,8 +125,8 @@
 import { useSaveCompany } from 'src/composables/useSaveCompany'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
-import { getCountriesOptions } from 'src/services/util.service'
-import { computed, reactive, ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
+import CountrySelect from 'src/components/common/CountrySelect.vue'
 
 const { onNextStep, selectedCompany } = defineProps({
   onNextStep: Function,
@@ -236,22 +191,6 @@ function onSearch(val, update) {
 }
 
 //---- select country -----
-const allCountries = getCountriesOptions()
-const filteredOptions = ref([...allCountries])
-
-function onCountryFilter(val, update) {
-  const search = val.toLowerCase()
-  filteredOptions.value = allCountries.filter(
-    (opt) =>
-      opt.label.toLowerCase().includes(search) ||
-      opt.description.toLowerCase().includes(search),
-  )
-  update()
-}
-
-const selectedCountryObj = computed(
-  () => allCountries.find((opt) => opt.value === newCompany.country) || null,
-)
 
 function onCountrySelect(val) {
   onUpdate('country', val?.value || '')

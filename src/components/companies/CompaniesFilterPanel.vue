@@ -81,62 +81,12 @@
             />
           </div>
 
-          <!-- Country select -->
-          <div class="select-input col-2 q-ml-lg">
-            <q-select
-              :model-value="selectedCountryObj"
-              @update:model-value="onCountrySelect"
-              outlined
-              dense
-              clearable
-              use-input
-              hide-selected
-              fill-input
-              placeholder="Filter by country"
-              :options="filteredCountries"
-              color="brand"
-              @filter="onCountryFilter"
-            >
-              <!-- Country Option template -->
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar>
-                    <q-img
-                      :src="scope.opt.flagURL"
-                      fit="contain"
-                      class="country-flag"
-                    />
-                  </q-item-section>
-
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.label }}</q-item-label>
-                    <q-item-label caption>
-                      {{ scope.opt.description }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-
-              <template v-slot:prepend>
-                <q-img
-                  :src="
-                    selectedCountryObj?.flagURL || '/imgs/placeholder_flag.jpg'
-                  "
-                  fit="contain"
-                  class="country-flag q-ml-xs q-mr-xs"
-                />
-              </template>
-
-              <!-- Country No results template -->
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey"
-                    >No countries found</q-item-section
-                  >
-                </q-item>
-              </template>
-            </q-select>
-          </div>
+          <CountrySelect
+            :onCountrySelect="onCountrySelect"
+            :selectedCountryCode="filterBy.country"
+            class="q-ml-lg col-2"
+            :dense="true"
+          />
 
           <!-- Parent Company select -->
           <q-select
@@ -209,9 +159,9 @@
 
 <script setup>
 import { ref, computed, reactive } from 'vue'
-import { getCountriesOptions } from 'src/services/util.service'
 import { useCompanies } from 'src/composables/useCompanies'
 import { companiesService } from 'src/services/api/companies.service'
+import CountrySelect from '../common/CountrySelect.vue'
 
 const { filterBy, updateFilterBy, maxPage } = defineProps({
   filterBy: {
@@ -258,22 +208,6 @@ function handleClearFilters() {
 }
 
 //---- Country filter -----
-const allCountries = getCountriesOptions()
-const filteredCountries = ref([...allCountries])
-
-function onCountryFilter(val, update) {
-  const search = val.toLowerCase()
-  filteredCountries.value = allCountries.filter(
-    (opt) =>
-      opt.label.toLowerCase().includes(search) ||
-      opt.description.toLowerCase().includes(search),
-  )
-  update()
-}
-
-const selectedCountryObj = computed(
-  () => allCountries.find((opt) => opt.value === filterBy.country) || null,
-)
 
 function onCountrySelect(val) {
   updateFilterBy('country', val?.value || '')
